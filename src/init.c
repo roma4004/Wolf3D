@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/08 19:31:59 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/10 15:43:38 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ t_env	*init_env(void)
 		//		init_img_buff((uint32_t)WIN_WIDTH, (uint32_t)WIN_HEIGHT))
 		|| !(new_env->state = SDL_GetKeyboardState(&new_env->state_arr_length))
 		|| !( IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)
-//		|| !(new_env->surface = SDL_GetWindowSurface(new_env->window))
+		|| (new_env->surface = SDL_GetWindowSurface(new_env->window))
 		)
 		{
 			ft_putstr(TTF_GetError());

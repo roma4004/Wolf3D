@@ -6,55 +6,58 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/09 16:02:02 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/11 17:27:25 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
 
+
 int main(void)//Sint32 argc, char **argv)
 {
 	t_env	*env;
-	float	x;
 	Sint32	worldMap[mapWidth][mapHeight] =
 	{
-		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,2,2,2,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,3,0,0,0,3,0,0,0,1},
-		{1,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,2,2,0,2,2,0,0,0,0,3,0,3,0,3,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,0,0,0,0,5,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,0,4,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,0,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+		{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7},
+		{4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+		{4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+		{4,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
+		{4,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
+		{4,0,4,0,0,0,0,5,5,5,5,5,5,5,5,5,7,7,0,7,7,7,7,7},
+		{4,0,5,0,0,0,0,5,0,5,0,5,0,5,0,5,7,0,0,0,7,7,7,1},
+		{4,0,6,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+		{4,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,1},
+		{4,0,8,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,0,0,0,8},
+		{4,0,0,0,0,0,0,5,0,0,0,0,0,0,0,5,7,0,0,0,7,7,7,1},
+		{4,0,0,0,0,0,0,5,5,5,5,0,5,5,5,5,7,7,7,7,7,7,7,1},
+		{6,6,6,6,6,6,6,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+		{8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4},
+		{6,6,6,6,6,6,0,6,6,6,6,0,6,6,6,6,6,6,6,6,6,6,6,6},
+		{4,4,4,4,4,4,0,4,4,4,6,0,6,2,2,2,2,2,2,2,3,3,3,3},
+		{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+		{4,0,0,0,0,0,0,0,0,0,0,0,6,2,0,0,5,0,0,2,0,0,0,2},
+		{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+		{4,0,6,0,6,0,0,0,0,4,6,0,0,0,0,0,5,0,0,0,0,0,0,2},
+		{4,0,0,5,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,2,0,2,2},
+		{4,0,6,0,6,0,0,0,0,4,6,0,6,2,0,0,5,0,0,2,0,0,0,2},
+		{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
+		{4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 	};
 
 	env = init_env();
 
-	env->posX = 22;
-	env->posY = 12;
-	env->dirX = -1;
-	env->dirY = 0; //initial direction vector
-	env->planeX = 0,
-	env->planeY = 0.66; //the 2d raycaster version of camera plane
+	env->pos.x = 22;
+	env->pos.y = 12;
+	env->direction.x = -1;
+	env->direction.y = 0; //initial direction vector
+	env->plane.x = 0,
+	env->plane.y = 0.66; //the 2d raycaster version of camera plane
 	env->current_tick    = 0; //current_tick of current frame
 	env->previous_tick = 0; //current_tick of previous frame
+
+
+	generate_texture(env);	//generate some textures
 
 	while (!env->game_over)
 	{
@@ -65,77 +68,7 @@ int main(void)//Sint32 argc, char **argv)
 		//
 		//
 		//ft_memset(env->img_buff, 0x0, WIN_HEIGHT * WIN_WIDTH * sizeof(int));
-		x = -1;
-		while (++x < WIN_WIDTH)
-		{	//calculate ray position and direction
-			env->cameraX = 2 * x / WIN_WIDTH - 1; //x-coordinate in camera
-			// space
-			env->rayDirX = env->dirX + env->planeX * env->cameraX;
-			env->rayDirY = env->dirY + env->planeY * env->cameraX;
-			//which box of the map we're in
-			env->mapX = (Sint32)env->posX;
-			env->mapY = (Sint32)env->posY;
-			//length of ray from current position to next x or y-side
-
-			//length of ray from one x or y-side to next x or y-side
-			env->deltaDistX = fabs(1.0f / env->rayDirX);
-			env->deltaDistY = fabs(1.0f / env->rayDirY);
-			//what direction to step in x or y-direction (either +1 or -1)
-
-			Sint32 hit = 0; //was there a wall hit?
-			//calculate step and initial sideDist
-			env->stepX = (Sint32)((env->rayDirX < 0.0f) ? -1 : 1);
-			env->stepY = (Sint32)((env->rayDirY < 0.0f) ? -1 : 1);
-			env->sideDistX = env->deltaDistX *
-					((env->rayDirX < 0.0f) ? (env->posX - env->mapX)
-											: (env->mapX + 1 - env->posX));
-			env->sideDistY = env->deltaDistY *
-					((env->rayDirY < 0.0f) ? (env->posY - env->mapY)
-											: (env->mapY + 1 - env->posY));
-			while (hit == 0)//perform DDA
-			{//jump to next map square, OR in x-direction, OR in y-direction
-				if (env->sideDistX < env->sideDistY)
-				{
-					env->sideDistX += env->deltaDistX;
-					env->mapX += env->stepX;
-					env->side = 0;
-				}
-				else
-				{
-					env->sideDistY += env->deltaDistY;
-					env->mapY += env->stepY;
-					env->side = 1;
-				}
-				//Check if ray has hit a wall
-				if (worldMap[env->mapX][env->mapY] > 0)
-					hit = 1;
-			}//Calculate distance projected on camera direction
-			// (Euclidean distance will give fisheye effect!)
-			if (env->side == 0)
-				env->perpWallDist =
-						(env->mapX - env->posX + (1.0f - env->stepX) / 2.0f)
-							/ env->rayDirX;
-			else
-				env->perpWallDist =
-						(env->mapY - env->posY + (1.0f - env->stepY) / 2.0f)
-							/ env->rayDirY;
-			//Calculate height of line to draw on screen
-			float lineHeight = (float)(WIN_HEIGHT / env->perpWallDist);
-			//calculate lowest and highest pixel to fill in current stripe
-			float drawStart = -lineHeight / 2.0f + WIN_HEIGHT / 2.0f;
-			if (drawStart < 0)
-				drawStart = 0;
-			float drawEnd = lineHeight / 2.0f + WIN_HEIGHT / 2.0f;
-			if (drawEnd >= WIN_HEIGHT)
-				drawEnd = WIN_HEIGHT - 1;
-			//draw the pixels of the stripe as a vertical line
-			while(drawStart < drawEnd)
-			{
-				env->img_buff[(Sint32)drawStart][(Sint32)x] =
-						chose_color(worldMap[env->mapX][env->mapY], env->side);
-				drawStart++;
-			}
-		}
+		raycasting(env, worldMap);
 		env->previous_tick = env->current_tick; // timing for input and FPS counter
 		env->current_tick = SDL_GetTicks();
 		//frameTime is the current_tick this frame has taken, in seconds
@@ -144,13 +77,13 @@ int main(void)//Sint32 argc, char **argv)
 	//	stroboscope_effect when display black_screen before every frame
 	//	SDL_RenderPresent(env->renderer);
 
-		//SDL_DestroyTexture(env->texture);
-		env->texture =
+		//SDL_DestroyTexture(env->sdl_texture);
+		env->sdl_texture =
 			SDL_CreateTexture(env->renderer,
 				SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
 					WIN_WIDTH, WIN_HEIGHT);
-		SDL_UpdateTexture(env->texture, NULL, env->img_buff, (WIN_WIDTH << 2));//WIN_WIDTH * sizeof(Sint32));
-		SDL_RenderCopy(env->renderer, env->texture, NULL, NULL);
+		SDL_UpdateTexture(env->sdl_texture, NULL, env->img_buff, (WIN_WIDTH << 2));//WIN_WIDTH * sizeof(Sint32));
+		SDL_RenderCopy(env->renderer, env->sdl_texture, NULL, NULL);
 		SDL_RenderPresent(env->renderer);
 
 		//speed modifiers
@@ -272,9 +205,6 @@ t_env *env = init_env();
 	   This will show the new, red contents of the window. */
 //	SDL_RenderPresent(env->renderer);
 
-
-	//	free_win(env);
-	/* Always be sure to clean up */
-	SDL_Quit();
+	quit_program(env);
 	return (0);
 }

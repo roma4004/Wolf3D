@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/08 18:24:08 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/11 17:36:00 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,115 +22,110 @@ void	event_handler(t_env *env, Sint32 worldMap[mapWidth][mapHeight])
 		env->game_over = true;
 	if (env->state[SDL_SCANCODE_W]) // move forward if no wall
 	{
-		if (worldMap[(Uint32)(env->posX + env->dirX * env->moveSpeed)]
-			[(Uint32)(env->posY)] == false)
-			env->posX += env->dirX * env->moveSpeed;
-		if (worldMap[(Uint32)(env->posX)]
-			[(Uint32)(env->posY + env->dirY * env->moveSpeed)] == false)
-			env->posY += env->dirY * env->moveSpeed;
+		if (worldMap[(Uint32)(env->pos.x + env->direction.x * env->moveSpeed)]
+			[(Uint32)(env->pos.y)] == false)
+			env->pos.x += env->direction.x * env->moveSpeed;
+		if (worldMap[(Uint32)(env->pos.x)]
+			[(Uint32)(env->pos.y + env->direction.y * env->moveSpeed)] == false)
+			env->pos.y += env->direction.y * env->moveSpeed;
 	}
 	if (env->state[SDL_SCANCODE_S]) //move backwards if no wall
 	{
-		if (worldMap[(Uint32)(env->posX - env->dirX * env->moveSpeed)]
-			[(Uint32)(env->posY)] == false)
-			env->posX -= env->dirX * env->moveSpeed;
-		if (worldMap[(Uint32)env->posX]
-			[(Uint32)(env->posY - env->dirY * env->moveSpeed)] == false)
-			env->posY -= env->dirY * env->moveSpeed;
+		if (worldMap[(Uint32)(env->pos.x - env->direction.x * env->moveSpeed)]
+			[(Uint32)(env->pos.y)] == false)
+			env->pos.x -= env->direction.x * env->moveSpeed;
+		if (worldMap[(Uint32)env->pos.x]
+			[(Uint32)(env->pos.y - env->direction.y * env->moveSpeed)] == false)
+			env->pos.y -= env->direction.y * env->moveSpeed;
 	}
 
 	if	(env->state[SDL_SCANCODE_A]) // move forward if no wall
 	{
-		if (worldMap[(Uint32)(env->posX + env->dirY * env->moveSpeed)]
-			[(Uint32)(env->posY)] == false)
-			env->posX += env->dirY * env->moveSpeed;
-		if (worldMap[(Uint32)(env->posX)]
-			[(Uint32)(env->posY + env->dirX * env->moveSpeed)] == false)
-			env->posY += env->dirX * env->moveSpeed;
+		if (worldMap[(Uint32)(env->pos.x + env->direction.y * env->moveSpeed)]
+			[(Uint32)(env->pos.y)] == false)
+			env->pos.x += env->direction.y * env->moveSpeed;
+		if (worldMap[(Uint32)(env->pos.x)]
+			[(Uint32)(env->pos.y + env->direction.x * env->moveSpeed)] == false)
+			env->pos.y += env->direction.x * env->moveSpeed;
 	}
 	if (env->state[SDL_SCANCODE_D]) //move backwards if no wall
 	{
-		if (worldMap[(Uint32)(env->posX - env->dirY * env->moveSpeed)]
-			[(Uint32)(env->posY)] == false)
-			env->posX -= env->dirY * env->moveSpeed;
-		if (worldMap[(Uint32)env->posX]
-			[(Uint32)(env->posY - env->dirX * env->moveSpeed)] == false)
-			env->posY -= env->dirX * env->moveSpeed;
+		if (worldMap[(Uint32)(env->pos.x - env->direction.y * env->moveSpeed)]
+			[(Uint32)(env->pos.y)] == false)
+			env->pos.x -= env->direction.y * env->moveSpeed;
+		if (worldMap[(Uint32)env->pos.x]
+			[(Uint32)(env->pos.y - env->direction.x * env->moveSpeed)] == false)
+			env->pos.y -= env->direction.x * env->moveSpeed;
 	}
 
 
 	if (env->state[SDL_SCANCODE_E]) //rotate to the right
 	{    //both camera direction and camera plane must be rotated
-		float oldDirX = env->dirX;
-		env->dirX = env->dirX * cos(-env->rotateSpeed) - env->dirY * sin
-				(-env->rotateSpeed);
-		env->dirY = oldDirX * sin(-env->rotateSpeed) + env->dirY * cos
-				(-env->rotateSpeed);
-		float oldPlaneX = env->planeX;
-		env->planeX =
-				env->planeX * cos(-env->rotateSpeed) - env->planeY * sin
-						(-env->rotateSpeed);
-		env->planeY =
-				oldPlaneX * sin(-env->rotateSpeed) + env->planeY * cos
+		float oldDirX = env->direction.x;
+		env->direction.x = env->direction.x * cos(-env->rotateSpeed)
+						- env->direction.y * sin(-env->rotateSpeed);
+		env->direction.y = oldDirX * sin(-env->rotateSpeed)
+						+ env->direction.y * cos(-env->rotateSpeed);
+		float oldplanex = env->plane.x;
+		env->plane.x = env->plane.x * cos(-env->rotateSpeed)
+					- env->plane.y * sin(-env->rotateSpeed);
+		env->plane.y =
+				oldplanex * sin(-env->rotateSpeed) + env->plane.y * cos
 						(-env->rotateSpeed);
 	}
 	if (env->state[SDL_SCANCODE_Q]) //rotate to the left
 	{    //both camera direction and camera plane must be rotated
-		float oldDirX = env->dirX;
-		env->dirX      =
-				env->dirX * cos(env->rotateSpeed) - env->dirY * sin
-						(env->rotateSpeed);
-		env->dirY      =
-				oldDirX * sin(env->rotateSpeed) + env->dirY * cos
-						(env->rotateSpeed);
-		float oldPlaneX = env->planeX;
-		env->planeX =
-				env->planeX * cos(env->rotateSpeed) - env->planeY * sin
-						(env->rotateSpeed);
-		env->planeY =
-				oldPlaneX * sin(env->rotateSpeed) + env->planeY * cos
-						(env->rotateSpeed);
+		double oldDirX = env->direction.x;
+		env->direction.x = env->direction.x * cos(env->rotateSpeed)
+						- env->direction.y * sin(env->rotateSpeed);
+		env->direction.y = oldDirX * sin(env->rotateSpeed)
+				+ env->direction.y * cos(env->rotateSpeed);
+		double oldplanex = env->plane.x;
+		env->plane.x = env->plane.x * cos(env->rotateSpeed)
+					- env->plane.y * sin(env->rotateSpeed);
+		env->plane.y = oldplanex * sin(env->rotateSpeed)
+					+ env->plane.y * cos(env->rotateSpeed);
 	}
 }
 //if (type == SDLK_UP) // move forward if no wall
 //{	printf("%d\n", type);
-//if (worldMap[(Uint32)(env->posX + env->dirX * env->moveSpeed)][(Uint32)(env->posY)] == false)
-//env->posX += env->dirX * env->moveSpeed;
+//if (worldMap[(Uint32)(env->posX + env->directionX * env->moveSpeed)][(Uint32)(env->posY)] == false)
+//env->posX += env->directionX * env->moveSpeed;
 //if (worldMap[(Uint32)(env->posX)][(Uint32)(env->posY + env->dirY * env->moveSpeed)] == false)
 //env->posY += env->dirY * env->moveSpeed;
 //}
 //if (type == SDLK_DOWN) //move backwards if no wall
 //{
-//if (worldMap[(Uint32)(env->posX - env->dirX * env->moveSpeed)][(Uint32)(env->posY)] == false)
-//env->posX -= env->dirX * env->moveSpeed;
+//if (worldMap[(Uint32)(env->posX - env->directionX * env->moveSpeed)][(Uint32)(env->posY)] == false)
+//env->posX -= env->directionX * env->moveSpeed;
 //if (worldMap[(Uint32)env->posX][(Uint32)(env->posY - env->dirY * env->moveSpeed)] == false)
 //env->posY -= env->dirY * env->moveSpeed;
 //}
 //
 //if (type == SDLK_RIGHT) //rotate to the right
 //{	//both camera direction and camera plane must be rotated
-//double oldDirX = env->dirX;
-//env->dirX = env->dirX * cos(-env->rotateSpeed) - env->dirY * sin
+//double oldDirX = env->directionX;
+//env->directionX = env->directionX * cos(-env->rotateSpeed) - env->dirY * sin
 //		(-env->rotateSpeed);
 //env->dirY = oldDirX * sin(-env->rotateSpeed) + env->dirY * cos
 //		(-env->rotateSpeed);
-//double oldPlaneX = env->planeX;
-//env->planeX = env->planeX * cos(-env->rotateSpeed) - env->planeY * sin
+//double oldplane.x = env->plane.x;
+//env->plane.x = env->plane.x * cos(-env->rotateSpeed) - env->plane.y * sin
 //		(-env->rotateSpeed);
-//env->planeY = oldPlaneX * sin(-env->rotateSpeed) + env->planeY * cos
+//env->plane.y = oldplane.x * sin(-env->rotateSpeed) + env->plane.y * cos
 //		(-env->rotateSpeed);
 //}
 //if (type == SDLK_LEFT) //rotate to the left
 //{	//both camera direction and camera plane must be rotated
-//double oldDirX = env->dirX;
-//env->dirX = env->dirX * cos(env->rotateSpeed) - env->dirY * sin
+//double oldDirX = env->directionX;
+//env->directionX = env->directionX * cos(env->rotateSpeed) - env->dirY * sin
 //		(env->rotateSpeed);
 //env->dirY = oldDirX * sin(env->rotateSpeed) + env->dirY * cos
 //		(env->rotateSpeed);
-//double oldPlaneX = env->planeX;
-//env->planeX = env->planeX * cos(env->rotateSpeed) - env->planeY * sin
+//double oldplane.x = env->plane.x;
+//env->plane.x = env->plane.x * cos(env->rotateSpeed) - env->plane.y * sin
 //		(env->rotateSpeed);
-//env->planeY = oldPlaneX * sin(env->rotateSpeed) + env->planeY * cos
+//env->plane.y = oldplane.x * sin(env->rotateSpeed) + env->plane.y * cos
 //		(env->rotateSpeed);
 //}
 //if (env->event.type == SDL_QUIT)

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/08 18:31:19 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/11 14:30:30 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,32 @@ Sint32	chose_color(Sint32 switch_num, Sint32 side)
 		color = color / 2;
 //	printf("=%lu=", sizeof(int));
 	return (color);
+}
+
+void	generate_texture(t_env *env)
+{
+	Sint32 x;
+	Sint32 y;
+
+	x = -1;
+	y = -1;
+	while (++x < texWidth)
+	{
+		while (++y < texHeight)
+		{
+			Sint32 xorcolor = (x * 256 / texWidth) ^ (y * 256 / texHeight);
+			//int xcolor = x * 256 / texWidth;
+			Sint32 ycolor = y * 256 / texHeight;
+			Sint32 xycolor = y * 128 / texHeight + x * 128 / texWidth;
+			env->texture[0][texWidth * y + x] = 65536 * 254 * (x != y && x != texWidth - y); //flat red
+			// sdl_texture with black cross
+			env->texture[1][texWidth * y + x] = xycolor + 256 * xycolor + 65536 * xycolor; //sloped greyscale
+			env->texture[2][texWidth * y + x] = 256 * xycolor + 65536 * xycolor; //sloped yellow gradient
+			env->texture[3][texWidth * y + x] = xorcolor + 256 * xorcolor + 65536 * xorcolor; //xor greyscale
+			env->texture[4][texWidth * y + x] = 256 * xorcolor; //xor green
+			env->texture[5][texWidth * y + x] = 65536 * 192 * (x % 16 && y % 16); //red bricks
+			env->texture[6][texWidth * y + x] = 65536 * ycolor; //red gradient
+			env->texture[7][texWidth * y + x] = 128 + 256 * 128 + 65536 * 128; //flat grey sdl_texture
+		}
+	}
 }

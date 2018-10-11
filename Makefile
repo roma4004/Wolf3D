@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/10/09 14:55:11 by dromanic         ###   ########.fr        #
+#    Updated: 2018/10/10 13:40:00 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,8 @@ LIBKEYS = -framework OpenGL \
         -I ~/Library/Frameworks/SDL2_ttf.framework/Versions/A/Headers \
         -F ~/Library/Frameworks/ -framework SDL2_ttf \
         -I ~/Library/Frameworks/SDL2_mixer.framework/Versions/A/Headers \
-        -F ~/Library/Frameworks/ -framework SDL2_mixer
+        -F ~/Library/Frameworks/ -framework SDL2_mixer\
+        -framework SDL2 -rpath ~/Library/Frameworks/SDL2.framework/
 
         #-F /Library/Frameworks -framework SDL2 \
         #-I /Library/Frameworks/SDL2.framework/Headers \
