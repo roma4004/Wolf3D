@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/11 17:27:25 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/12 20:49:43 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,56 +44,26 @@ int main(void)//Sint32 argc, char **argv)
 		{4,0,0,0,0,0,0,0,0,4,6,0,6,2,0,0,0,0,0,2,0,0,0,2},
 		{4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 	};
-
 	env = init_env();
-
-	env->pos.x = 22;
-	env->pos.y = 12;
-	env->direction.x = -1;
-	env->direction.y = 0; //initial direction vector
-	env->plane.x = 0,
-	env->plane.y = 0.66; //the 2d raycaster version of camera plane
-	env->current_tick    = 0; //current_tick of current frame
-	env->previous_tick = 0; //current_tick of previous frame
-
-
-	generate_texture(env);	//generate some textures
-
+	generate_texture(env);
 	while (!env->game_over)
 	{
-//		SDL_SetRenderDrawColor(env->renderer, 255, 0, 0, 255);
-//		SDL_RenderClear(env->renderer);
+		get_time_ticks(env);
 		clear_img_buff(env);
-		//ft_bzero(env->img_buff, WIN_WIDTH*WIN_HEIGHT*sizeof(Sint32));
-		//
-		//
-		//ft_memset(env->img_buff, 0x0, WIN_HEIGHT * WIN_WIDTH * sizeof(int));
-		raycasting(env, worldMap);
-		env->previous_tick = env->current_tick; // timing for input and FPS counter
-		env->current_tick = SDL_GetTicks();
-		//frameTime is the current_tick this frame has taken, in seconds
-		env->frameTime = (env->current_tick - env->previous_tick) / 1000.0f;
-		//prSint32f("%f\n", 1.0 / frameTime); //FPS counter
-	//	stroboscope_effect when display black_screen before every frame
-	//	SDL_RenderPresent(env->renderer);
-
-		//SDL_DestroyTexture(env->sdl_texture);
-		env->sdl_texture =
-			SDL_CreateTexture(env->renderer,
-				SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
-					WIN_WIDTH, WIN_HEIGHT);
-		SDL_UpdateTexture(env->sdl_texture, NULL, env->img_buff, (WIN_WIDTH << 2));//WIN_WIDTH * sizeof(Sint32));
+		raycasting(env, worldMap, -1);
+		env->sdl_texture = SDL_CreateTexture(env->renderer,
+							SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
+							WIN_WIDTH, WIN_HEIGHT);
+		SDL_UpdateTexture(env->sdl_texture, NULL, env->img_buff,
+							(WIN_WIDTH << 2));//WIN_WIDTH * sizeof(Sint32));
 		SDL_RenderCopy(env->renderer, env->sdl_texture, NULL, NULL);
 		SDL_RenderPresent(env->renderer);
-
 		//speed modifiers
 		env->moveSpeed = env->frameTime * 5.0f; //in squares/second
 		env->rotateSpeed = env->frameTime * 3.0f; //in radians/second
 		event_handler(env, worldMap);
 		frame_limit(env->current_tick, env->previous_tick);
 	}
-
-
 //----------------------------------------------
 /*
 t_env *env = init_env();

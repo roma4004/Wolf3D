@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/10 15:43:38 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/12 18:30:25 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,21 @@ SDL_Texture		*load_texture(t_env *env, char *path_name )
 //	return (NULL);
 //}
 
+t_env	*env_def_val(t_env *env)
+{
+	if (!env)
+		return (NULL);
+	env->pos.x = 22;
+	env->pos.y = 11.5;
+	env->direction.x = -1;
+	env->direction.y = 0; //initial dir vector
+	env->plane.x = 0;
+	env->plane.y = 0.66; //the 2d raycaster version of camera plane
+	env->current_tick = 0; //current_tick of current frame
+	env->previous_tick = 0; //current_tick of previous frame
+	return (env);
+}
+
 t_env	*init_env(void)
 {
 	t_env	*new_env;
@@ -95,24 +110,17 @@ t_env	*init_env(void)
 	{
 		if ((SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS) < 0)//OR SDL_INIT_EVERYTHING
 		|| (TTF_Init() == -1)
-		|| (!(new_env->window =
-				SDL_CreateWindow(WIN_NAME, SDL_WINDOWPOS_UNDEFINED,   //SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-					SDL_WINDOWPOS_UNDEFINED, WIN_WIDTH, WIN_HEIGHT,
-						SDL_WINDOW_RESIZABLE))) 	//SDL_WINDOW_FULLSCREEN ||
-						// SDL_WINDOW_RESIZABLE
+		|| (!(new_env->window = SDL_CreateWindow(WIN_NAME, //SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+				SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+				WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_RESIZABLE))) //SDL_WINDOW_FULLSCREEN || SDL_WINDOW_RESIZABLE
 		|| !(new_env->renderer = SDL_CreateRenderer(new_env->window, -1,
 				SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC))
-//		|| !(new_env->mainTexture =
-//				SDL_CreateTexture(new_env->renderer, SDL_PIXELFORMAT_ARGB8888,
-//						SDL_TEXTUREACCESS_STATIC, WIN_WIDTH, WIN_HEIGHT))
 		|| (SDL_GetDesktopDisplayMode(0, &new_env->display_param))
 		|| (new_env->game_over = false)
-		//|| !(new_env->img_buff =
-		//		init_img_buff((uint32_t)WIN_WIDTH, (uint32_t)WIN_HEIGHT))
 		|| !(new_env->state = SDL_GetKeyboardState(&new_env->state_arr_length))
 		|| !( IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)
 		|| (new_env->surface = SDL_GetWindowSurface(new_env->window))
-		)
+		|| !(env_def_val(new_env)) )
 		{
 			ft_putstr(TTF_GetError());
 			SDL_Quit();
@@ -122,4 +130,8 @@ t_env	*init_env(void)
 	return (new_env);
 }
 
+//		|| !(new_env->img_buff = init_img_buff((uint32_t)WIN_WIDTH, (uint32_t)WIN_HEIGHT))
+//		|| !(new_env->mainTexture =
+//				SDL_CreateTexture(new_env->renderer, SDL_PIXELFORMAT_ARGB8888,
+//						SDL_TEXTUREACCESS_STATIC, WIN_WIDTH, WIN_HEIGHT))
 //img_buff is not two dimensional

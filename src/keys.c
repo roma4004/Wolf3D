@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/11 17:36:00 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/12 17:52:32 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,14 @@ void	event_handler(t_env *env, Sint32 worldMap[mapWidth][mapHeight])
 	}
 
 	if	(env->state[SDL_SCANCODE_A]) // move forward if no wall
-	{
+	{//both camera dir and camera plane must be rotated
+//		double oldDirX = env->dir.x;
+//		env->dir.x = env->dir.x * cos(env->rotateSpeed) - env->dir.y * sin(env->rotateSpeed);
+//		env->dir.y = oldDirX * sin(env->rotateSpeed) + env->dir.y * cos(env->rotateSpeed);
+//		double oldPlaneX = env->plane.x;
+//		env->plane.x = env->plane.x * cos(env->rotateSpeed) - env->plane.y * sin(env->rotateSpeed);
+//		env->plane.y = oldPlaneX * sin(env->rotateSpeed) + env->plane.y * cos(env->rotateSpeed);
+
 		if (worldMap[(Uint32)(env->pos.x + env->direction.y * env->moveSpeed)]
 			[(Uint32)(env->pos.y)] == false)
 			env->pos.x += env->direction.y * env->moveSpeed;
@@ -60,7 +67,7 @@ void	event_handler(t_env *env, Sint32 worldMap[mapWidth][mapHeight])
 
 
 	if (env->state[SDL_SCANCODE_E]) //rotate to the right
-	{    //both camera direction and camera plane must be rotated
+	{    //both camera dir and camera plane must be rotated
 		float oldDirX = env->direction.x;
 		env->direction.x = env->direction.x * cos(-env->rotateSpeed)
 						- env->direction.y * sin(-env->rotateSpeed);
@@ -74,7 +81,7 @@ void	event_handler(t_env *env, Sint32 worldMap[mapWidth][mapHeight])
 						(-env->rotateSpeed);
 	}
 	if (env->state[SDL_SCANCODE_Q]) //rotate to the left
-	{    //both camera direction and camera plane must be rotated
+	{    //both camera dir and camera plane must be rotated
 		double oldDirX = env->direction.x;
 		env->direction.x = env->direction.x * cos(env->rotateSpeed)
 						- env->direction.y * sin(env->rotateSpeed);
@@ -103,7 +110,7 @@ void	event_handler(t_env *env, Sint32 worldMap[mapWidth][mapHeight])
 //}
 //
 //if (type == SDLK_RIGHT) //rotate to the right
-//{	//both camera direction and camera plane must be rotated
+//{	//both camera dir and camera plane must be rotated
 //double oldDirX = env->directionX;
 //env->directionX = env->directionX * cos(-env->rotateSpeed) - env->dirY * sin
 //		(-env->rotateSpeed);
@@ -116,7 +123,7 @@ void	event_handler(t_env *env, Sint32 worldMap[mapWidth][mapHeight])
 //		(-env->rotateSpeed);
 //}
 //if (type == SDLK_LEFT) //rotate to the left
-//{	//both camera direction and camera plane must be rotated
+//{	//both camera dir and camera plane must be rotated
 //double oldDirX = env->directionX;
 //env->directionX = env->directionX * cos(env->rotateSpeed) - env->dirY * sin
 //		(env->rotateSpeed);
