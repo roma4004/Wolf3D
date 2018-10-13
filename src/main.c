@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/12 20:49:43 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/13 19:43:58 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,21 +48,22 @@ int main(void)//Sint32 argc, char **argv)
 	generate_texture(env);
 	while (!env->game_over)
 	{
-		get_time_ticks(env);
+		get_time_ticks(&env->fps);
 		clear_img_buff(env);
 		raycasting(env, worldMap, -1);
-		env->sdl_texture = SDL_CreateTexture(env->renderer,
+		env->main_texture = SDL_CreateTexture(env->renderer,
 							SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
 							WIN_WIDTH, WIN_HEIGHT);
-		SDL_UpdateTexture(env->sdl_texture, NULL, env->img_buff,
+//		swap_px(env, tex_width * tex_height);
+		SDL_UpdateTexture(env->main_texture, NULL, env->img_buff,
 							(WIN_WIDTH << 2));//WIN_WIDTH * sizeof(Sint32));
-		SDL_RenderCopy(env->renderer, env->sdl_texture, NULL, NULL);
+		SDL_RenderCopy(env->renderer, env->main_texture, NULL, NULL);
 		SDL_RenderPresent(env->renderer);
-		//speed modifiers
-		env->moveSpeed = env->frameTime * 5.0f; //in squares/second
-		env->rotateSpeed = env->frameTime * 3.0f; //in radians/second
+		env->moveSpeed = env->fps.frame_time * 5; //in squares/second
+		env->rotateSpeed = env->fps.frame_time * 3; //in radians/second
 		event_handler(env, worldMap);
-		frame_limit(env->current_tick, env->previous_tick);
+		frame_limit(env->fps.current_tick, env->fps.previous_tick,
+					env->fps.frame_limit_second);
 	}
 //----------------------------------------------
 /*
@@ -97,7 +98,7 @@ t_env *env = init_env();
 	}
 	env->game_over = 0;
 	ft_memset(env->framesTimes, 0, sizeof(env->framesTimes));
-	env->frameCount = 0;
+	env->frame_count = 0;
 	env->frameTimeLast = SDL_GetTicks();
 	while (!env->game_over)
 	{
@@ -112,25 +113,25 @@ t_env *env = init_env();
 		for (Sint32 i = 0; i < env->screen_size; i += rand() % 2) {
 			canvas[i] = rand();
 		}
-		SDL_UpdateTexture(env->mainTexture, NULL, canvas,
+		SDL_UpdateTexture(env->main_texture, NULL, canvas,
 				WIN_WIDTH * sizeof(Sint32));
-		SDL_RenderCopy(env->renderer, env->mainTexture, NULL, NULL);
+		SDL_RenderCopy(env->renderer, env->main_texture, NULL, NULL);
 		{
-			env->framesTimesindex = env->frameCount % FRAME_LIMIT;
+			env->frames_timesindex = env->frame_count % FRAME_LIMIT;
 			env->getticks = SDL_GetTicks();
-			env->framesTimes[env->framesTimesindex] =
+			env->framesTimes[env->frames_timesindex] =
 					env->getticks - env->frameTimeLast;
 			env->frameTimeLast = env->getticks;
-			env->frameCount++;
-			Sint32 count = env->frameCount < FRAME_LIMIT ?
-							env->frameCount : FRAME_LIMIT;
-			env->fps = 0;
+			env->frame_count++;
+			Sint32 count = env->frame_count < FRAME_LIMIT ?
+							env->frame_count : FRAME_LIMIT;
+			env->value = 0;
 			for (Sint32 i = 0; i < count; i++)
-				env->fps += env->framesTimes[i];
-			env->fps = 1000.f / (env->fps / count);
-			Sint32 messageTextLength = snprSint32f(NULL, 0, "FPS: %f", env->fps);
+				env->value += env->framesTimes[i];
+			env->value = 1000.f / (env->value / count);
+			Sint32 messageTextLength = snprSint32f(NULL, 0, "FPS: %f", env->value);
 			char *messageText = (char *) malloc(messageTextLength + 1);
-			snprSint32f(messageText, messageTextLength + 1, "FPS: %f", env->fps);
+			snprSint32f(messageText, messageTextLength + 1, "FPS: %f", env->value);
 			SDL_Surface *messageSurface =
 					TTF_RenderUTF8_Blended(messageFont, messageText,
 							txt.messageColor);

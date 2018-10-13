@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/12 20:59:25 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/13 19:43:58 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 # define WIN_NAME "wolf3d by dromanic (@Dentair)"
 # define DEFAULT_MENU_COLOR 0x0f9100FF
 # define DEF_FONT "fonts/ARIAL.TTF"
-#define FRAME_LIMIT 80
+#define FRAME_LIMIT 80 // todo change this in realtime
 #define mapWidth 24
 #define mapHeight 24
-#define texWidth 64
-#define texHeight 64
-#define textureCount 8
+#define tex_width 64
+#define tex_height 64
+#define texture_count 8
 #include <stdbool.h>
 
 # include <stdlib.h>
@@ -36,10 +36,11 @@
 //#include "../library/frameworks/SDL2_image.framework/Versions/A/Headers/SDL_image.h"
 //# include <SDL2/SDL.h>
 //# include <SDL2_ttf/SDL_ttf.h>
-# include "../library/frameworks/SDL2_ttf.framework/Headers/SDL_ttf.h"
-# include "../library/frameworks/SDL2_image.framework/Headers/SDL_image.h"
-# include "../library/frameworks/SDL2_mixer.framework/Headers/SDL_mixer.h"
+# include "SDL_ttf.h"
+# include "SDL_image.h"
+# include "SDL_mixer.h"
 # include "../library/libft/libft.h"
+//# include "SDL_sysrender.h"
 
 typedef struct	s_uint32_point
 {
@@ -70,23 +71,35 @@ typedef struct	s_sprite
 
 typedef struct	s_line
 {
-	double	height;
-	double	start;
-	double	end;
-	double	perp_wall_dist;
+	bool			side;//was a NS or a EW wall hit?
+	double			height;
+	double			start;
+	double			end;
+	double			normal;
 }				t_line;
 
 typedef struct	s_ray
 {
-	unsigned char	less_dist:1;
-	unsigned char	hit:1;
+	bool			x_less;
+	bool			hit;
+
+	double			wallX;
+//	double			hit_x; //where exactly the wall was hit
 	float			x;
 	t_double_pt		dist;
-	t_double_pt		delta_dist;
+	t_double_pt		step;
 	t_double_pt		dir;
-	t_sint32_pt		pt;
-
+	t_sint32_pt		pos;
 }				t_ray;
+
+typedef struct	s_frame_per_second
+{
+	float		value;
+	Uint32		frame_limit_second;
+	double		frame_time;
+	Uint32		current_tick;
+	Uint32		previous_tick;
+}				t_fps;
 
 typedef struct	s_text
 {
@@ -134,51 +147,45 @@ typedef struct	s_environment
 {
 	bool			game_over;
 	int				state_arr_length;
-	const Uint8		*state;
-	float			fps;
+
 	double			moveSpeed;
 	double			rotateSpeed;
-	double			frameTime;
-	double			camera_x;
-	Uint32			framesTimesindex;
-	Uint32			getticks;
-	Uint32			frameTimeLast;
-	Uint32			frameCount;
-	Uint32			current_tick;
-	Uint32			framesTimes[FRAME_LIMIT];
-	Uint32 			buffer[WIN_HEIGHT][WIN_WIDTH];// y-coordinate first because it works per scanline
-	Uint32			previous_tick;
-	Sint32			side;//was a NS or a EW wall hit?
-	Sint32			hit;
-	Sint32			img_buff[WIN_HEIGHT][WIN_WIDTH];
-	Sint32			texture[textureCount][texWidth * texHeight];
+	t_fps			fps;
 	t_double_pt		pos;
-	t_double_pt		direction;
+	t_double_pt		player_dir;
 	t_sint32_pt		step;
-//	t_sint32_pt		map_pt;
+
+	double			camera_x;
 	t_double_pt		plane;
+
+	t_uint32_pt		win_center;
+	Uint32 			buffer[WIN_HEIGHT][WIN_WIDTH];// y-coordinate first because it works per scanline
+	Sint32			img_buff[WIN_HEIGHT][WIN_WIDTH];
+	const Uint8		*state;
+	Sint32		texture[texture_count][tex_width * tex_height];
 //vector			sdl_texture[8];
-	SDL_Texture		*sdl_texture;
+//vector			sdl_texture[8];
+	SDL_Texture		**textures;
 	SDL_DisplayMode	display_param;
 	SDL_Event		event;
 	SDL_Window		*window;
 	SDL_Renderer	*renderer;
-	SDL_Texture		*mainTexture;
+	SDL_Texture		*main_texture;
 	SDL_Surface		*surface;
-
 }				t_env;
 
 t_env			*init_env();
-int				display_interface(t_env *env);
+//int				display_interface();
 void			event_handler(t_env *env, Sint32 [mapWidth][mapHeight]);
 Sint32 			chose_color(Sint32 switch_num, Sint32 side);
 void			verLine(t_env *env, int x, int start, int end, int color);
 void			clear_img_buff(t_env *env);
 //int			*init_img_buff(int width, int height);
-void			frame_limit(Uint32 current_tick, Uint32 previous_tick);
+void			frame_limit(Uint32 current_tick, Uint32 previous_tick,
+							Uint32 frame_limit_second);
 void			quit_program(t_env *env);
 void			raycasting(t_env *env, Sint32 worldMap[mapWidth][mapHeight], double x);
 void			generate_texture(t_env *env);
-void			get_time_ticks(t_env *env);
-void			swap_px(t_env *env, size_t texSize);
+void			get_time_ticks(t_fps *fps);
+void			swap_px(t_env *env, Uint32 texSize);
 #endif

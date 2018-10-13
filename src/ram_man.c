@@ -16,10 +16,10 @@ void	quit_program(t_env *env)
 {
 	if (env)
 	{
-		if (env->mainTexture)
+		if (env->main_texture)
 		{
-			SDL_DestroyTexture(env->mainTexture);
-			env->mainTexture = NULL;
+			SDL_DestroyTexture(env->main_texture);
+			env->main_texture = NULL;
 		}
 		if (env->renderer)
 		{

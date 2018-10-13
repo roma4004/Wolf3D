@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 14:33:57 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/11 14:30:30 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/13 17:09:05 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 Sint32	chose_color(Sint32 switch_num, Sint32 side)
 {
-	Sint32 color;
-	//printf("%d\n", switch_num);
+	Sint32	color; //printf("%d\n", switch_num);
 	if (switch_num == 1)
 		color = RED;//0xFF << 16;
 		// SDL_MapRGB(env->surface->format, 255, 0, 0);/ red
@@ -29,39 +28,40 @@ Sint32	chose_color(Sint32 switch_num, Sint32 side)
 		color = WHITE;//0xFFFFFF << 2;
 		// SDL_MapRGB(env->surface->format, 255, 255, 255);//white
 	else
-		color = YELLOW;// 0xFFFF << 8;//SDL_MapRGB(env->surface->format, 255,
-				// 255, 0);
-		// yellow 0xFFff << 8
-	if (side == 1) 				//give x and y sides different brightness
-		color = color / 2;
+		color = YELLOW;// 0xFFFF << 8; // SDL_MapRGB(env->surface->format, 255, 255, 0);
+	if (side) 				//give x and y sides different brightness
+		color /= 2;
 //	printf("=%lu=", sizeof(int));
 	return (color);
 }
 
 void	generate_texture(t_env *env)
 {
-	Sint32 x;
-	Sint32 y;
+	Uint32	x;
+	Uint32	y;
+	Uint32	px;
 
-	x = -1;
-	y = -1;
-	while (++x < texWidth)
+	x = 0;
+	while (x < tex_width)
 	{
-		while (++y < texHeight)
+		y = 0;
+		while (y < tex_height)
 		{
-			Sint32 xorcolor = (x * 256 / texWidth) ^ (y * 256 / texHeight);
-			//int xcolor = x * 256 / texWidth;
-			Sint32 ycolor = y * 256 / texHeight;
-			Sint32 xycolor = y * 128 / texHeight + x * 128 / texWidth;
-			env->texture[0][texWidth * y + x] = 65536 * 254 * (x != y && x != texWidth - y); //flat red
-			// sdl_texture with black cross
-			env->texture[1][texWidth * y + x] = xycolor + 256 * xycolor + 65536 * xycolor; //sloped greyscale
-			env->texture[2][texWidth * y + x] = 256 * xycolor + 65536 * xycolor; //sloped yellow gradient
-			env->texture[3][texWidth * y + x] = xorcolor + 256 * xorcolor + 65536 * xorcolor; //xor greyscale
-			env->texture[4][texWidth * y + x] = 256 * xorcolor; //xor green
-			env->texture[5][texWidth * y + x] = 65536 * 192 * (x % 16 && y % 16); //red bricks
-			env->texture[6][texWidth * y + x] = 65536 * ycolor; //red gradient
-			env->texture[7][texWidth * y + x] = 128 + 256 * 128 + 65536 * 128; //flat grey sdl_texture
+			px = tex_width * y + x;
+			Sint32 xorcolor = (x * 256 / tex_width) ^ (y * 256 / tex_height);
+			//int xcolor = x * 256 / tex_width;
+			Sint32 ycolor   = y * 256 / tex_height;
+			Sint32 xycolor  = y * 128 / tex_height + x * 128 / tex_width;
+			env->texture[0][px] = 65536 * 254 * (x != y && x != tex_width - y); //flat red sdl_texture with black cross
+			env->texture[1][px] = xycolor + 256 * xycolor + 65536 * xycolor; //sloped greyscale
+			env->texture[2][px] = 256 * xycolor + 65536 * xycolor; //sloped yellow gradient
+			env->texture[3][px] = xorcolor + 256 * xorcolor + 65536 * xorcolor; //xor greyscale
+			env->texture[4][px] = 256 * xorcolor; //xor green
+			env->texture[5][px] = 65536 * 192 * (x % 16 && y % 16); //red bricks
+			env->texture[6][px] = 65536 * ycolor; //red gradient
+			env->texture[7][px] = 128 + 256 * 128 + 65536 * 128; //flat grey sdl_texture
+			y++;
 		}
+		x++;
 	}
 }

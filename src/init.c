@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/12 18:30:25 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/13 20:16:28 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,22 +58,22 @@
 //		flag_reset(new_flags);
 //	return (new_flags);
 //}
-SDL_Texture		*load_texture(t_env *env, char *path_name )
+SDL_Surface		*load_surface(char *path_name )
 {
 	SDL_Surface *new_srf;
-	SDL_Texture *new_tex;
+	//SDL_Texture *new_tex;
 
 	//	||	!(new_tex = // SDL_CreateTextureFromSurface(env->renderer, new_srf))
-	if (!(new_srf = SDL_LoadBMP(path_name))
-	||	!(new_tex = IMG_LoadTexture(env->renderer, path_name))
+	if (!(new_srf = IMG_Load(path_name))
+	//||	!(new_tex = IMG_LoadTexture(env->renderer, path_name))
 	)
 	{
 		ft_putstr(TTF_GetError());
 		return (0);
 	}
-	;
-	SDL_FreeSurface(new_srf);
-	return (new_tex);
+
+	//SDL_FreeSurface(new_srf);
+	return (new_srf);
 }
 
 //uint32_t		*init_img_buff(uint32_t width, uint32_t height)
@@ -93,12 +93,25 @@ t_env	*env_def_val(t_env *env)
 		return (NULL);
 	env->pos.x = 22;
 	env->pos.y = 11.5;
-	env->direction.x = -1;
-	env->direction.y = 0; //initial dir vector
-	env->plane.x = 0;
+	env->player_dir.x = -1;
+	env->player_dir.y = 0; //initial dir vector
+	env->plane.x = 0;//need to change this plane in real time (give psihodelic effect)
 	env->plane.y = 0.66; //the 2d raycaster version of camera plane
-	env->current_tick = 0; //current_tick of current frame
-	env->previous_tick = 0; //current_tick of previous frame
+	env->fps.current_tick = 0; //current_tick of current frame
+	env->fps.previous_tick = 0; //current_tick of previous frame
+	env->win_center.x = WIN_WIDTH / 2;
+	env->win_center.y = WIN_HEIGHT / 2;
+	env->fps.frame_limit_second = 1000 / FRAME_LIMIT;
+
+//	env->textures[0] = load_texture(env, "texture/eagle.png");
+//	env->textures[1] = load_texture(env, "texture/redbrick.png");
+//	env->textures[2] = load_texture(env, "texture/purplestone.png");
+//	env->textures[3] = load_texture(env, "texture/greystone.png");
+//	env->textures[4] = load_texture(env, "texture/bluestone.png");
+//	env->textures[5] = load_texture(env, "texture/mossy.png");
+//	env->textures[6] = load_texture(env, "texture/wood.png");
+//	env->textures[7] = load_texture(env, "texture/colorstone.png");
+
 	return (env);
 }
 
@@ -119,8 +132,10 @@ t_env	*init_env(void)
 		|| (new_env->game_over = false)
 		|| !(new_env->state = SDL_GetKeyboardState(&new_env->state_arr_length))
 		|| !( IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)
-		|| (new_env->surface = SDL_GetWindowSurface(new_env->window))
+		//|| (new_env->surface = SDL_GetWindowSurface(new_env->window))
 		|| !(env_def_val(new_env)) )
+		//|| !(new_env->textures =
+		//		(SDL_Texture *)malloc(sizeof(SDL_Texture ) * texture_count))
 		{
 			ft_putstr(TTF_GetError());
 			SDL_Quit();
@@ -131,7 +146,7 @@ t_env	*init_env(void)
 }
 
 //		|| !(new_env->img_buff = init_img_buff((uint32_t)WIN_WIDTH, (uint32_t)WIN_HEIGHT))
-//		|| !(new_env->mainTexture =
+//		|| !(new_env->main_texture =
 //				SDL_CreateTexture(new_env->renderer, SDL_PIXELFORMAT_ARGB8888,
 //						SDL_TEXTUREACCESS_STATIC, WIN_WIDTH, WIN_HEIGHT))
 //img_buff is not two dimensional
