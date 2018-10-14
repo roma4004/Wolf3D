@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/13 19:43:58 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/14 19:58:22 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 
 
-int main(void)//Sint32 argc, char **argv)
+int main(void)//Uint32 argc, char **argv)
 {
 	t_env	*env;
-	Sint32	worldMap[mapWidth][mapHeight] =
+	Uint32	worldMap[mapWidth][mapHeight] =
 	{
 		{4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,7,7,7,7,7,7,7,7},
 		{4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,7},
@@ -45,19 +45,17 @@ int main(void)//Sint32 argc, char **argv)
 		{4,4,4,4,4,4,4,4,4,4,1,1,1,2,2,2,2,2,2,3,3,3,3,3}
 	};
 	env = init_env();
-	generate_texture(env);
 	while (!env->game_over)
 	{
 		get_time_ticks(&env->fps);
 		clear_img_buff(env);
-		raycasting(env, worldMap, -1);
-		env->main_texture = SDL_CreateTexture(env->renderer,
+		raycasting(env, worldMap);
+		env->screen_texture = SDL_CreateTexture(env->renderer,
 							SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
 							WIN_WIDTH, WIN_HEIGHT);
-//		swap_px(env, tex_width * tex_height);
-		SDL_UpdateTexture(env->main_texture, NULL, env->img_buff,
+		SDL_UpdateTexture(env->screen_texture, NULL, env->img_buff,
 							(WIN_WIDTH << 2));//WIN_WIDTH * sizeof(Sint32));
-		SDL_RenderCopy(env->renderer, env->main_texture, NULL, NULL);
+		SDL_RenderCopy(env->renderer, env->screen_texture, NULL, NULL);
 		SDL_RenderPresent(env->renderer);
 		env->moveSpeed = env->fps.frame_time * 5; //in squares/second
 		env->rotateSpeed = env->fps.frame_time * 3; //in radians/second
@@ -113,9 +111,9 @@ t_env *env = init_env();
 		for (Sint32 i = 0; i < env->screen_size; i += rand() % 2) {
 			canvas[i] = rand();
 		}
-		SDL_UpdateTexture(env->main_texture, NULL, canvas,
+		SDL_UpdateTexture(env->screen_texture, NULL, canvas,
 				WIN_WIDTH * sizeof(Sint32));
-		SDL_RenderCopy(env->renderer, env->main_texture, NULL, NULL);
+		SDL_RenderCopy(env->renderer, env->screen_texture, NULL, NULL);
 		{
 			env->frames_timesindex = env->frame_count % FRAME_LIMIT;
 			env->getticks = SDL_GetTicks();

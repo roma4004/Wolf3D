@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/13 20:16:28 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/14 20:02:29 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,22 +58,30 @@
 //		flag_reset(new_flags);
 //	return (new_flags);
 //}
-SDL_Surface		*load_surface(char *path_name )
+SDL_Surface		*load_surface( char *path_name )
 {
-	SDL_Surface *new_srf;
-	//SDL_Texture *new_tex;
+	SDL_Surface			*new_srf;
+	SDL_Surface			*convert_srf;
+	SDL_PixelFormat		px_format;
 
-	//	||	!(new_tex = // SDL_CreateTextureFromSurface(env->renderer, new_srf))
+	px_format.format = SDL_PIXELFORMAT_ARGB8888;
+	px_format.palette = NULL;
+	px_format.BytesPerPixel = sizeof(Uint32);
+	px_format.BitsPerPixel = px_format.BytesPerPixel * (Uint8)8;
+	px_format.Rmask = 0;
+	px_format.Gmask = 0;
+	px_format.Bmask = 0;
+	px_format.Amask = 0;
 	if (!(new_srf = IMG_Load(path_name))
-	//||	!(new_tex = IMG_LoadTexture(env->renderer, path_name))
+	|| !(convert_srf = SDL_ConvertSurface(new_srf, &px_format, 0))
 	)
 	{
-		ft_putstr(TTF_GetError());
+		ft_putstr(SDL_GetError());
 		return (0);
 	}
-
-	//SDL_FreeSurface(new_srf);
-	return (new_srf);
+	if (new_srf)
+		SDL_FreeSurface(new_srf);
+	return (convert_srf);
 }
 
 //uint32_t		*init_img_buff(uint32_t width, uint32_t height)
@@ -91,10 +99,10 @@ t_env	*env_def_val(t_env *env)
 {
 	if (!env)
 		return (NULL);
-	env->pos.x = 22;
-	env->pos.y = 11.5;
-	env->player_dir.x = -1;
-	env->player_dir.y = 0; //initial dir vector
+	env->pos.x = 3;
+	env->pos.y = 4;
+	env->cam_dir.x = -1;
+	env->cam_dir.y = 0; //initial dir vector
 	env->plane.x = 0;//need to change this plane in real time (give psihodelic effect)
 	env->plane.y = 0.66; //the 2d raycaster version of camera plane
 	env->fps.current_tick = 0; //current_tick of current frame
@@ -102,15 +110,20 @@ t_env	*env_def_val(t_env *env)
 	env->win_center.x = WIN_WIDTH / 2;
 	env->win_center.y = WIN_HEIGHT / 2;
 	env->fps.frame_limit_second = 1000 / FRAME_LIMIT;
-
-//	env->textures[0] = load_texture(env, "texture/eagle.png");
-//	env->textures[1] = load_texture(env, "texture/redbrick.png");
-//	env->textures[2] = load_texture(env, "texture/purplestone.png");
-//	env->textures[3] = load_texture(env, "texture/greystone.png");
-//	env->textures[4] = load_texture(env, "texture/bluestone.png");
-//	env->textures[5] = load_texture(env, "texture/mossy.png");
-//	env->textures[6] = load_texture(env, "texture/wood.png");
-//	env->textures[7] = load_texture(env, "texture/colorstone.png");
+	env->zoom = 1;
+	env->bytes_per_pixel = sizeof(Uint32);
+	env->bits_per_pixel = env->bytes_per_pixel * (unsigned char)8;
+	env->texture_mode = 2; //need to switch this in realtime (and correctly free)
+	env->wall_scale = 1;
+	generate_texture(env);
+	env->surfaces[0] = load_surface("textures/eagle.png");
+	env->surfaces[1] = load_surface("textures/redbrick.png");
+	env->surfaces[2] = load_surface("textures/purplestone.png");
+	env->surfaces[3] = load_surface("textures/greystone.png");
+	env->surfaces[4] = load_surface("textures/bluestone.png");
+	env->surfaces[5] = load_surface("textures/mossy.png");
+	env->surfaces[6] = load_surface("textures/wood.png");
+	env->surfaces[7] = load_surface("textures/colorstone.png");
 
 	return (env);
 }
@@ -131,14 +144,15 @@ t_env	*init_env(void)
 		|| (SDL_GetDesktopDisplayMode(0, &new_env->display_param))
 		|| (new_env->game_over = false)
 		|| !(new_env->state = SDL_GetKeyboardState(&new_env->state_arr_length))
-		|| !( IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)
+		|| !(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)
 		//|| (new_env->surface = SDL_GetWindowSurface(new_env->window))
-		|| !(env_def_val(new_env)) )
-		//|| !(new_env->textures =
-		//		(SDL_Texture *)malloc(sizeof(SDL_Texture ) * texture_count))
+		|| !(new_env->surfaces =
+				(SDL_Surface **)malloc(sizeof(SDL_Surface *) * texture_count))
+		|| !(env_def_val(new_env))
+		)
 		{
 			ft_putstr(TTF_GetError());
-			SDL_Quit();
+			quit_program(new_env);
 			return (NULL);
 		}
 	}
@@ -146,7 +160,7 @@ t_env	*init_env(void)
 }
 
 //		|| !(new_env->img_buff = init_img_buff((uint32_t)WIN_WIDTH, (uint32_t)WIN_HEIGHT))
-//		|| !(new_env->main_texture =
+//		|| !(new_env->screen_texture =
 //				SDL_CreateTexture(new_env->renderer, SDL_PIXELFORMAT_ARGB8888,
 //						SDL_TEXTUREACCESS_STATIC, WIN_WIDTH, WIN_HEIGHT))
 //img_buff is not two dimensional

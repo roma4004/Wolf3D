@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/13 19:43:58 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/14 19:59:14 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,32 +71,36 @@ typedef struct	s_sprite
 
 typedef struct	s_line
 {
+	Uint32			tex_num;
+	Uint32			tex_x;
+	Uint32			*img;
 	bool			side;//was a NS or a EW wall hit?
+	double			start_y;
+	double			end_y;
+	Sint32			x;
+	Sint32			tex_y;
+	Uint32			color;
+	double			d;
 	double			height;
-	double			start;
-	double			end;
 	double			normal;
 }				t_line;
 
 typedef struct	s_ray
 {
 	bool			x_less;
-	bool			hit;
-
-	double			wallX;
-//	double			hit_x; //where exactly the wall was hit
-	float			x;
+	double			wall_x;
+	double			x;
 	t_double_pt		dist;
 	t_double_pt		step;
 	t_double_pt		dir;
-	t_sint32_pt		pos;
+	t_uint32_pt		pos;
 }				t_ray;
 
 typedef struct	s_frame_per_second
 {
 	float		value;
-	Uint32		frame_limit_second;
 	double		frame_time;
+	Uint32		frame_limit_second;
 	Uint32		current_tick;
 	Uint32		previous_tick;
 }				t_fps;
@@ -108,6 +112,11 @@ typedef struct	s_text
 	SDL_Color	messageColor;
 	SDL_Rect	rect;
 }				t_txt;
+
+typedef struct	s_camera
+{
+
+}				t_cam;
 
 enum			e_colors
 {
@@ -146,45 +155,49 @@ enum			e_keys_code
 typedef struct	s_environment
 {
 	bool			game_over;
+	unsigned char	texture_mode;
+	char			wall_scale;
 	int				state_arr_length;
-
+	Uint8			bytes_per_pixel;
+	Uint8			bits_per_pixel;
 	double			moveSpeed;
 	double			rotateSpeed;
 	t_fps			fps;
-	t_double_pt		pos;
-	t_double_pt		player_dir;
 	t_sint32_pt		step;
 
+	t_double_pt		pos;
+	t_double_pt		cam_dir;
 	double			camera_x;
+	double			zoom;
 	t_double_pt		plane;
 
 	t_uint32_pt		win_center;
 	Uint32 			buffer[WIN_HEIGHT][WIN_WIDTH];// y-coordinate first because it works per scanline
 	Sint32			img_buff[WIN_HEIGHT][WIN_WIDTH];
 	const Uint8		*state;
-	Sint32		texture[texture_count][tex_width * tex_height];
+	Uint32			texture[texture_count][tex_width * tex_height];
 //vector			sdl_texture[8];
 //vector			sdl_texture[8];
-	SDL_Texture		**textures;
+	SDL_Surface		**surfaces;
 	SDL_DisplayMode	display_param;
 	SDL_Event		event;
 	SDL_Window		*window;
 	SDL_Renderer	*renderer;
-	SDL_Texture		*main_texture;
+	SDL_Texture		*screen_texture;
 	SDL_Surface		*surface;
 }				t_env;
 
 t_env			*init_env();
 //int				display_interface();
-void			event_handler(t_env *env, Sint32 [mapWidth][mapHeight]);
-Sint32 			chose_color(Sint32 switch_num, Sint32 side);
+void			event_handler(t_env *env, Uint32 [mapWidth][mapHeight]);
+Uint32 			chose_color(Uint32 switch_num, bool side);
 void			verLine(t_env *env, int x, int start, int end, int color);
 void			clear_img_buff(t_env *env);
 //int			*init_img_buff(int width, int height);
 void			frame_limit(Uint32 current_tick, Uint32 previous_tick,
 							Uint32 frame_limit_second);
 void			quit_program(t_env *env);
-void			raycasting(t_env *env, Sint32 worldMap[mapWidth][mapHeight], double x);
+void			raycasting(t_env *env, Uint32 worldMap[mapWidth][mapHeight]);
 void			generate_texture(t_env *env);
 void			get_time_ticks(t_fps *fps);
 void			swap_px(t_env *env, Uint32 texSize);
