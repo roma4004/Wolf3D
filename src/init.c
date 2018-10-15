@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/14 20:02:29 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/15 17:41:31 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ SDL_Surface		*load_surface( char *path_name )
 	SDL_Surface			*convert_srf;
 	SDL_PixelFormat		px_format;
 
+	new_srf = NULL;
 	px_format.format = SDL_PIXELFORMAT_ARGB8888;
 	px_format.palette = NULL;
 	px_format.BytesPerPixel = sizeof(Uint32);
@@ -94,27 +95,35 @@ SDL_Surface		*load_surface( char *path_name )
 //	}
 //	return (NULL);
 //}
+//t_txt		*init_text()
+//{
+//	t_txt *new_text;
+//
+//	new_text.messageFont = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE)
+//}
 
-t_env	*env_def_val(t_env *env)
+t_env		*env_def_val(t_env *env)
 {
 	if (!env)
 		return (NULL);
-	env->pos.x = 3;
-	env->pos.y = 4;
-	env->cam_dir.x = -1;
-	env->cam_dir.y = 0; //initial dir vector
-	env->plane.x = 0;//need to change this plane in real time (give psihodelic effect)
-	env->plane.y = 0.66; //the 2d raycaster version of camera plane
+	env->game_over = false;
+	env->cam.pos.x = 3;
+	env->cam.pos.y = 4;
+	env->cam.dir.x = -1;
+	env->cam.dir.y = 0; //initial dir vector
+	env->cam.plane.x = 0;//need to change this plane in real time (give
+	// psihodelic effect)
+	env->cam.plane.y = 0.66; //the 2d raycaster version of camera plane
 	env->fps.current_tick = 0; //current_tick of current frame
 	env->fps.previous_tick = 0; //current_tick of previous frame
-	env->win_center.x = WIN_WIDTH / 2;
-	env->win_center.y = WIN_HEIGHT / 2;
+	env->cam.center.x = WIN_WIDTH / 2;
+	env->cam.center.y = WIN_HEIGHT / 2;
 	env->fps.frame_limit_second = 1000 / FRAME_LIMIT;
-	env->zoom = 1;
+	env->cam.zoom = 1;
 	env->bytes_per_pixel = sizeof(Uint32);
 	env->bits_per_pixel = env->bytes_per_pixel * (unsigned char)8;
-	env->texture_mode = 2; //need to switch this in realtime (and correctly free)
-	env->wall_scale = 1;
+	env->tex_mode = 2; //need to switch this in realtime (and correctly free)
+	env->cam.wall_scale = 1;
 	generate_texture(env);
 	env->surfaces[0] = load_surface("textures/eagle.png");
 	env->surfaces[1] = load_surface("textures/redbrick.png");
@@ -124,7 +133,9 @@ t_env	*env_def_val(t_env *env)
 	env->surfaces[5] = load_surface("textures/mossy.png");
 	env->surfaces[6] = load_surface("textures/wood.png");
 	env->surfaces[7] = load_surface("textures/colorstone.png");
-
+	env->txt.color = (SDL_Color){255, 255, 255, 0};
+	env->txt.width = 0;
+	env->txt.height = 0;
 	return (env);
 }
 
@@ -132,35 +143,34 @@ t_env	*init_env(void)
 {
 	t_env	*new_env;
 
-	if ((new_env = (t_env *)malloc(sizeof(t_env))))
+	if (!(new_env = (t_env *)malloc(sizeof(t_env)))
+	|| (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS))
+	|| (TTF_Init() == -1)
+	|| (!(new_env->window = SDL_CreateWindow(WIN_NAME, //SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+			WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_RESIZABLE))) //SDL_WINDOW_FULLSCREEN || SDL_WINDOW_RESIZABLE
+	|| !(new_env->renderer = SDL_CreateRenderer(new_env->window, -1,
+			SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC))
+	|| !(new_env->screen = SDL_CreateTexture(new_env->renderer,
+			SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
+			WIN_WIDTH, WIN_HEIGHT))
+	|| (SDL_GetDesktopDisplayMode(0, &new_env->display_param))
+	|| !(new_env->state = SDL_GetKeyboardState(&new_env->state_arr_length))
+	|| !(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)
+	|| !(new_env->surfaces =
+			(SDL_Surface **)malloc(sizeof(SDL_Surface *) * texture_count))
+	|| !(new_env->txt.messageFont = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE))
+	|| !(env_def_val(new_env)))
 	{
-		if ((SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS) < 0)//OR SDL_INIT_EVERYTHING
-		|| (TTF_Init() == -1)
-		|| (!(new_env->window = SDL_CreateWindow(WIN_NAME, //SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-				SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-				WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_RESIZABLE))) //SDL_WINDOW_FULLSCREEN || SDL_WINDOW_RESIZABLE
-		|| !(new_env->renderer = SDL_CreateRenderer(new_env->window, -1,
-				SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC))
-		|| (SDL_GetDesktopDisplayMode(0, &new_env->display_param))
-		|| (new_env->game_over = false)
-		|| !(new_env->state = SDL_GetKeyboardState(&new_env->state_arr_length))
-		|| !(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)
-		//|| (new_env->surface = SDL_GetWindowSurface(new_env->window))
-		|| !(new_env->surfaces =
-				(SDL_Surface **)malloc(sizeof(SDL_Surface *) * texture_count))
-		|| !(env_def_val(new_env))
-		)
-		{
-			ft_putstr(TTF_GetError());
-			quit_program(new_env);
-			return (NULL);
-		}
+		ft_putstr(TTF_GetError());
+		quit_program(new_env);
+		return (NULL);
 	}
 	return (new_env);
 }
 
 //		|| !(new_env->img_buff = init_img_buff((uint32_t)WIN_WIDTH, (uint32_t)WIN_HEIGHT))
-//		|| !(new_env->screen_texture =
+//		|| !(new_env->screen =
 //				SDL_CreateTexture(new_env->renderer, SDL_PIXELFORMAT_ARGB8888,
 //						SDL_TEXTUREACCESS_STATIC, WIN_WIDTH, WIN_HEIGHT))
 //img_buff is not two dimensional

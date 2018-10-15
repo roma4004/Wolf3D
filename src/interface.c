@@ -14,12 +14,6 @@
 
 int		display_interface(void)
 {
-	TTF_Font	*messageFont = TTF_OpenFont(DEF_FONT, 24);
 
-	if (messageFont == NULL) {
-		printf("%s\n", SDL_GetError());
-		SDL_Quit();
-		return 1;
-	}
 	return (0);
 }
