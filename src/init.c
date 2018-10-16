@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/15 17:41:31 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/16 20:46:51 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,11 @@ t_env		*env_def_val(t_env *env)
 	if (!env)
 		return (NULL);
 	env->game_over = false;
-	env->cam.pos.x = 3;
-	env->cam.pos.y = 4;
+	env->cam.pos.x = 22;
+	env->cam.pos.y = 11.5;
 	env->cam.dir.x = -1;
-	env->cam.dir.y = 0; //initial dir vector
-	env->cam.plane.x = 0;//need to change this plane in real time (give
-	// psihodelic effect)
+	env->cam.dir.y = 0;
+	env->cam.plane.x = 0;//need to change in real time (give psihodelic effect)
 	env->cam.plane.y = 0.66; //the 2d raycaster version of camera plane
 	env->fps.current_tick = 0; //current_tick of current frame
 	env->fps.previous_tick = 0; //current_tick of previous frame
@@ -126,13 +125,14 @@ t_env		*env_def_val(t_env *env)
 	env->cam.wall_scale = 1;
 	generate_texture(env);
 	env->surfaces[0] = load_surface("textures/eagle.png");
-	env->surfaces[1] = load_surface("textures/redbrick.png");
-	env->surfaces[2] = load_surface("textures/purplestone.png");
-	env->surfaces[3] = load_surface("textures/greystone.png");
-	env->surfaces[4] = load_surface("textures/bluestone.png");
+	env->surfaces[1] = load_surface("textures/red_brick.png");
+	env->surfaces[2] = load_surface("textures/purple_stone.png");
+	env->surfaces[3] = load_surface("textures/grey_stone.png");
+	env->surfaces[4] = load_surface("textures/blue_stone.png");
 	env->surfaces[5] = load_surface("textures/mossy.png");
 	env->surfaces[6] = load_surface("textures/wood.png");
-	env->surfaces[7] = load_surface("textures/colorstone.png");
+	env->surfaces[7] = load_surface("textures/color_stone.png");
+	env->surfaces[8] = load_surface("textures/color_stone.png");
 	env->txt.color = (SDL_Color){255, 255, 255, 0};
 	env->txt.width = 0;
 	env->txt.height = 0;

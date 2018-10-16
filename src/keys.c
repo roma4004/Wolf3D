@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/15 15:53:40 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/16 17:13:00 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@ void	event_handler(t_env *env, Uint32 worldMap[mapWidth][mapHeight])
 {
 	SDL_PumpEvents();
 	SDL_PollEvent(&env->event);
+
+
+
 	if (env->event.type == SDL_QUIT || env->state[SDL_SCANCODE_ESCAPE])
 		env->game_over = true;
 	if (env->state[SDL_SCANCODE_W]) // move forward if no wall

@@ -6,14 +6,14 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/15 19:24:50 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/16 19:11:13 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
+# define WIN_WIDTH 1800
+# define WIN_HEIGHT 1200
 # define WIN_NAME "wolf3d by dromanic (@Dentair)"
 # define DEFAULT_MENU_COLOR 0x0f9100FF
 # define DEF_FONT "fonts/ARIAL.TTF"
@@ -23,7 +23,7 @@
 # define mapHeight 24
 # define tex_width 64
 # define tex_height 64
-# define texture_count 8
+# define texture_count 9
 #include <stdbool.h>
 
 # include <stdlib.h>
@@ -71,7 +71,8 @@ typedef struct	s_sprite
 
 typedef struct	s_line
 {
-	bool			side;//was a NS or a EW wall hit?
+	unsigned int	side;//was a NS or a EW wall hit?
+	unsigned int	side_offset;//was a NS or a EW wall hit?
 	Uint32			tex_num;
 	Uint32			tex_x;
 	Uint32			*img;
@@ -82,7 +83,14 @@ typedef struct	s_line
 	Uint32			color;
 	Uint32			scale;
 	double			height;
+	double			half;
 	double			normal;
+
+	double			weight;
+	t_double_pt		currentFloor;
+	t_sint32_pt		floorTex;
+	double			current_dist;
+	t_double_pt		floor_wall;
 }			t_line;
 
 typedef struct	s_ray
@@ -126,7 +134,7 @@ typedef struct	s_camera
 	double			move_speed;
 	double			rotate_speed;
 	t_uint32_pt		center;
-	char			wall_scale;
+	double			wall_scale;
 }			t_cam;
 
 typedef struct	s_environment
@@ -136,10 +144,9 @@ typedef struct	s_environment
 	int				state_arr_length;
 	Uint8			bytes_per_pixel;
 	Uint8			bits_per_pixel;
-	const Uint8		*state;
-	Uint32 			buffer[WIN_HEIGHT][WIN_WIDTH];// y-coordinate first because it works per scanline
 	Sint32			img_buff[WIN_HEIGHT][WIN_WIDTH];
 	Uint32			gen_texture[texture_count][tex_width * tex_height];
+	const Uint8		*state;
 	t_cam			cam;
 	t_txt			txt;
 	t_fps			fps;
@@ -171,7 +178,8 @@ void			clear_img_buff(t_env *env);
 void			frame_limit(Uint32 current_tick, Uint32 previous_tick,
 							Uint32 frame_limit_second);
 void			quit_program(t_env *env);
-void			raycasting(t_env *env, Uint32 worldMap[mapWidth][mapHeight]);
+void			raycasting(t_env *env,
+								Uint32 worldMap[mapWidth][mapHeight]);
 void			generate_texture(t_env *env);
 void			frame_rate_adjustment(t_env *env, t_fps *fps);
 void			swap_px(t_env *env, Uint32 texSize);
