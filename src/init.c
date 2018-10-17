@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/16 20:46:51 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/17 13:07:04 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ t_env		*env_def_val(t_env *env)
 	if (!env)
 		return (NULL);
 	env->game_over = false;
+	env->is_compass_texture = 1;
+	env->tex_mode = 2; //need to switch this in realtime (and correctly free)
 	env->cam.pos.x = 22;
 	env->cam.pos.y = 11.5;
 	env->cam.dir.x = -1;
@@ -121,7 +123,6 @@ t_env		*env_def_val(t_env *env)
 	env->cam.zoom = 1;
 	env->bytes_per_pixel = sizeof(Uint32);
 	env->bits_per_pixel = env->bytes_per_pixel * (unsigned char)8;
-	env->tex_mode = 2; //need to switch this in realtime (and correctly free)
 	env->cam.wall_scale = 1;
 	generate_texture(env);
 	env->surfaces[0] = load_surface("textures/eagle.png");

@@ -6,13 +6,31 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/16 14:18:42 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/17 12:21:13 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-int main(void)//Uint32 argc, char **argv)
+Uint32		*chose_gen_or_image(t_env *env, Uint32 gen_id, Uint32 img_id)
+{
+	return ((env->tex_mode == 1) ? env->gen_texture[gen_id]
+								 : env->surfaces[img_id]->pixels);
+}
+static void	frame_rate_adjustment(t_env *env, t_fps *fps)
+{
+	fps->previous_tick = fps->current_tick;
+	fps->current_tick = SDL_GetTicks();
+	fps->frame_time = (fps->current_tick - fps->previous_tick) / 1000.f;
+	env->cam.move_speed = fps->frame_time * 5; //in squares/second
+	env->cam.rotate_speed = fps->frame_time * 3; //in radians/second
+	if ((fps->frame_limit_second) > fps->current_tick - fps->previous_tick)
+		SDL_Delay(fps->frame_limit_second -
+				  (fps->current_tick - fps->previous_tick));
+	//prSint32f("%f\n", 1.0 / frame_time); //FPS counter
+}
+
+int			main(void)//Uint32 argc, char **argv)
 {
 	t_env	*env;
 	Uint32	worldMap[mapWidth][mapHeight] =

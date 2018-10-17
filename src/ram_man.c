@@ -12,6 +12,23 @@
 
 #include "main.h"
 
+void		clear_img_buff(t_env *env)
+{
+	Uint32	y;
+	Uint32	x;
+
+	if (!env)
+		return ;
+	y = 0;
+	while (y < WIN_HEIGHT)
+	{
+		x = 0;
+		while (x < WIN_WIDTH)
+			env->img_buff[y][x++] = 0x0;
+		y++;
+	}
+}
+
 void	quit_program(t_env *env)
 {
 	if (env)

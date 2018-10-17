@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/16 19:11:13 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/17 17:55:40 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,24 +24,15 @@
 # define tex_width 64
 # define tex_height 64
 # define texture_count 9
-#include <stdbool.h>
 
+# include <stdbool.h>
 # include <stdlib.h>
-# include <stdio.h>
 # include <math.h>
-# include <string.h>
 
-//# include "../library/frameworks/SDL2.framework/Headers/extern.h"
-//# include <SDL2/SDL.h>
-//#include "../library/frameworks/SDL2_ttf.framework/Versions/A/Headers/SDL_ttf.h"
-//#include "../library/frameworks/SDL2_image.framework/Versions/A/Headers/SDL_image.h"
-//# include <SDL2/SDL.h>
-//# include <SDL2_ttf/SDL_ttf.h>
 # include "SDL_ttf.h"
 # include "SDL_image.h"
 # include "SDL_mixer.h"
 # include "../library/libft/libft.h"
-//# include "SDL_sysrender.h"
 
 typedef struct	s_uint32_point
 {
@@ -71,10 +62,8 @@ typedef struct	s_sprite
 
 typedef struct	s_line
 {
-	unsigned int	side;//was a NS or a EW wall hit?
-	unsigned int	side_offset;//was a NS or a EW wall hit?
+	unsigned int	side;
 	Uint32			tex_num;
-	Uint32			tex_x;
 	Uint32			*img;
 	Uint32			x;
 	Uint32			tex_y;
@@ -88,7 +77,7 @@ typedef struct	s_line
 
 	double			weight;
 	t_double_pt		currentFloor;
-	t_sint32_pt		floorTex;
+	t_sint32_pt		texture;
 	double			current_dist;
 	t_double_pt		floor_wall;
 }			t_line;
@@ -137,9 +126,20 @@ typedef struct	s_camera
 	double			wall_scale;
 }			t_cam;
 
+typedef struct	s_wall
+{
+	double	x;
+
+	Uint32	n_side;
+	Uint32	w_side;
+	Uint32	e_side;
+	Uint32	s_side;
+}				t_wall;
+
 typedef struct	s_environment
 {
 	bool			game_over;
+	bool			is_compass_texture;
 	unsigned char	tex_mode;
 	int				state_arr_length;
 	Uint8			bytes_per_pixel;
@@ -157,6 +157,8 @@ typedef struct	s_environment
 	SDL_Renderer	*renderer;
 	SDL_Texture		*screen;
 	SDL_Surface		*surface;
+
+	t_wall			**map;
 }				t_env;
 
 enum			e_colors
@@ -180,7 +182,7 @@ void			frame_limit(Uint32 current_tick, Uint32 previous_tick,
 void			quit_program(t_env *env);
 void			raycasting(t_env *env,
 								Uint32 worldMap[mapWidth][mapHeight]);
+Uint32			*chose_gen_or_image(t_env *env, Uint32 gen_id, Uint32 img_id);
 void			generate_texture(t_env *env);
-void			frame_rate_adjustment(t_env *env, t_fps *fps);
 void			swap_px(t_env *env, Uint32 texSize);
 #endif
