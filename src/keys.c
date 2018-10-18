@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/18 18:03:06 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/18 18:07:00 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void		event_handler(t_env *env, Uint32 worldMap[mapWidth][mapHeight])
 {
 	SDL_PumpEvents();
 	SDL_PollEvent(&env->event);
-
 	if (env->event.type == SDL_QUIT || env->state[SDL_SCANCODE_ESCAPE])
 		env->game_over = true;
 	if (env->state[SDL_SCANCODE_W])

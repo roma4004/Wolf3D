@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/18 15:07:40 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/18 19:17:48 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void		painting(t_env *env, t_ray *ray, t_line *line,
 	{
 		line->tex_num = worldMap[ray->pos.x][ray->pos.y] - 1;
 		ray->wall_x = (line->side == 0) ? env->cam.pos.y + line->normal
-			 * ray->dir.y : env->cam.pos.x + line->normal * ray->dir.x;
+					* ray->dir.y : env->cam.pos.x + line->normal * ray->dir.x;
 		ray->wall_x -= floor(ray->wall_x);
 		line->texture.x = (Uint32)(ray->wall_x * tex_width);
 		if ((!line->side && ray->dir.x > 0) || (line->side && ray->dir.y < 0))
@@ -86,29 +86,29 @@ static void		draw_wall_line(t_env *env, Uint32 worldMap[mapWidth][mapHeight],
 
 static void		draw_floor_celling_line(t_env *env, t_ray *ray, t_line *line)
 {
-	line->floor_wall.x = ray->pos.x + ((!line->side && ray->dir.x < 0) ? 1 : 0);
-	line->floor_wall.y = ray->pos.y + ((line->side && ray->dir.y < 0) ? 1 : 0);
+	line->start.x = ray->pos.x + ((!line->side && ray->dir.x < 0) ? 1 : 0);
+	line->start.y = ray->pos.y + ((line->side && ray->dir.y < 0) ? 1 : 0);
 	if (!line->side && ray->dir.x != 0)
-		line->floor_wall.y += ray->wall_x;
+		line->start.y += ray->wall_x;
 	if (line->side && ray->dir.y != 0)
-		line->floor_wall.x += ray->wall_x;
-	line->start_y = line->end_y ;
+		line->start.x += ray->wall_x;
+	line->start_y = line->end_y;
 	while (++line->start_y < WIN_HEIGHT)
 	{
 		line->current_dist = WIN_HEIGHT / (2.0 * line->start_y - WIN_HEIGHT);
 		line->weight = line->current_dist / line->normal;
-		line->currentFloor.x = line->weight * line->floor_wall.x
+		line->coords.x = line->weight * line->start.x
 			+ (1 / env->cam.wall_scale - line->weight) * env->cam.pos.x;
-		line->currentFloor.y = line->weight * line->floor_wall.y
+		line->coords.y = line->weight * line->start.y
 			+ (1 / env->cam.wall_scale - line->weight) * env->cam.pos.y;
-		line->texture.x = (int)(line->currentFloor.x * tex_width) % tex_width;
-		line->texture.y = (int)(line->currentFloor.y * tex_height) % tex_height;
-		line->img = chose_gen_or_image (env, 3, 6);
+		line->texture.x = (int)(line->coords.x * tex_width) % tex_width;
+		line->texture.y = (int)(line->coords.y * tex_height) % tex_height;
+		line->img = chose_gen_or_image(env, 3, 6);
 		env->img_buff[line->start_y][(Uint32)ray->x] = (line->img
 			[tex_width * line->texture.y + line->texture.x] >> 1) & 8355711;
-		line->img = chose_gen_or_image (env, 6, 3);
+		line->img = chose_gen_or_image(env, 6, 3);
 		env->img_buff[WIN_HEIGHT - line->start_y][(Uint32)ray->x] =
-				line->img[tex_width * line->texture.y + line->texture.x];
+			line->img[tex_width * line->texture.y + line->texture.x];
 	}
 }
 

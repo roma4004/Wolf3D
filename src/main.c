@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/18 15:19:37 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/18 19:35:24 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,17 +77,17 @@ int			main(void)//Uint32 argc, char **argv)
 		{2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5},
 		{2,2,2,2,1,2,2,2,2,2,2,1,2,2,2,5,5,5,5,5,5,5,5,5}
 	};
-	env = init_env();
-	while (!env->game_over)
-	{
-		frame_rate_adjustment(env, &env->fps);
-		clear_img_buff(env);
-		raycasting(env, worldMap);
-		SDL_UpdateTexture(env->screen, NULL, env->img_buff, (WIN_WIDTH << 2));
-		SDL_RenderCopy(env->renderer, env->screen, NULL, NULL);
-		SDL_RenderPresent(env->renderer);
-		event_handler(env, worldMap);
-	}
+	if ((env = init_env()))
+		while (!env->game_over)
+		{
+			frame_rate_adjustment(env, &env->fps);
+			clear_img_buff(env);
+			raycasting(env, worldMap);
+			SDL_UpdateTexture(env->screen, NULL, env->img_buff, (WIN_WIDTH << 2));
+			SDL_RenderCopy(env->renderer, env->screen, NULL, NULL);
+			SDL_RenderPresent(env->renderer);
+			event_handler(env, worldMap);
+		}
 //----------------------------------------------
 /*
 	SDL_Rect player_RECT;

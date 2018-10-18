@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/18 17:50:20 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/18 20:21:52 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,10 @@ typedef struct	s_line
 	double			normal;
 
 	double			weight;
-	t_double_pt		currentFloor;
+	t_double_pt		coords;
 	t_sint32_pt		texture;
 	double			current_dist;
-	t_double_pt		floor_wall;
+	t_double_pt		start;
 }			t_line;
 
 typedef struct	s_ray
@@ -164,8 +164,8 @@ typedef struct	s_environment
 	SDL_Surface		*surface;
 
 	t_wall			**map;
-//	Uint32			map_height;
-//	Uint32			map_width;
+	Uint32			map_height;
+	Uint32			map_width;
 	Uint32			map_center_y;
 	Uint32			map_center_x;
 	Uint32			error_code;
@@ -186,6 +186,7 @@ enum			e_errors
 	WIDTH_ERR = 405,
 	READ_ERR = 406,
 	COLOR_ERR = 407,
+	INVALID_RESOURCE = 408,
 	ITS_A_DIRECTORY = 21
 };
 
@@ -204,4 +205,5 @@ void			raycasting(t_env *env,
 Uint32			*chose_gen_or_image(t_env *env, Uint32 gen_id, Uint32 img_id);
 void			generate_texture(t_env *env);
 void			swap_px(t_env *env, Uint32 texSize);
+size_t			ft_cnt_words(char *str, size_t max_i, char separator);
 #endif
