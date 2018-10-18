@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/17 13:02:35 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/18 15:07:40 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void		set_texture_pixel(t_env *env, t_ray *ray, t_line *line)
 }
 
 static void		painting(t_env *env, t_ray *ray, t_line *line,
-					Uint32 worldMap[mapWidth][mapHeight])
+							Uint32 worldMap[mapWidth][mapHeight])
 {
 	if (env->tex_mode)
 	{
@@ -57,7 +57,7 @@ static void		painting(t_env *env, t_ray *ray, t_line *line,
 }
 
 static void		draw_wall_line(t_env *env, Uint32 worldMap[mapWidth][mapHeight],
-		t_ray *ray, t_line *line)
+								t_ray *ray, t_line *line)
 {
 	t_cam	*cam;
 

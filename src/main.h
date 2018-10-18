@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/17 17:55:40 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/18 17:50:20 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define tex_width 64
 # define tex_height 64
 # define texture_count 9
+# define WIDTH_ERR_SKIP 0
 
 # include <stdbool.h>
 # include <stdlib.h>
@@ -33,6 +34,9 @@
 # include "SDL_image.h"
 # include "SDL_mixer.h"
 # include "../library/libft/libft.h"
+# include "get_next_line.h"
+# include <string.h>
+# include <errno.h>
 
 typedef struct	s_uint32_point
 {
@@ -121,6 +125,7 @@ typedef struct	s_camera
 	double			zoom;
 	t_double_pt		plane;
 	double			move_speed;
+	double			min_wall_dist;
 	double			rotate_speed;
 	t_uint32_pt		center;
 	double			wall_scale;
@@ -128,7 +133,7 @@ typedef struct	s_camera
 
 typedef struct	s_wall
 {
-	double	x;
+	Uint32	tex_id;
 
 	Uint32	n_side;
 	Uint32	w_side;
@@ -159,6 +164,11 @@ typedef struct	s_environment
 	SDL_Surface		*surface;
 
 	t_wall			**map;
+//	Uint32			map_height;
+//	Uint32			map_width;
+	Uint32			map_center_y;
+	Uint32			map_center_x;
+	Uint32			error_code;
 }				t_env;
 
 enum			e_colors
@@ -168,6 +178,15 @@ enum			e_colors
 	BLUE = 0x0000FF,
 	WHITE = 0xFFFFFF,
 	YELLOW = 0xFFFF00
+};
+
+enum			e_errors
+{
+	MAP_INVALID = 404,
+	WIDTH_ERR = 405,
+	READ_ERR = 406,
+	COLOR_ERR = 407,
+	ITS_A_DIRECTORY = 21
 };
 
 t_env			*init_env();

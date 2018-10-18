@@ -6,11 +6,28 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/17 12:21:13 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/18 15:19:37 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
+
+size_t	ft_cnt_words(char *str, size_t max_i, char separator)
+{
+	size_t	i;
+	size_t	num;
+
+	if (str == NULL)
+		return (0);
+	i = 0;
+	num = 0;
+	if (str[0] != separator)
+		num++;
+	while (++i < max_i && str[i])
+		if (str[i] != separator && str[i - 1] == separator)
+			num++;
+	return (num);
+}
 
 Uint32		*chose_gen_or_image(t_env *env, Uint32 gen_id, Uint32 img_id)
 {

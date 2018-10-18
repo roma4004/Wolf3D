@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/17 13:07:04 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/18 16:18:14 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,9 @@ t_env		*env_def_val(t_env *env)
 	env->txt.color = (SDL_Color){255, 255, 255, 0};
 	env->txt.width = 0;
 	env->txt.height = 0;
+//	env->map_height = 24;
+//	env->map_width = 24;
+	env->cam.min_wall_dist = 2.5;
 	return (env);
 }
 
