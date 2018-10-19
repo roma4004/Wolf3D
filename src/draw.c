@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/18 19:17:48 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/19 18:04:32 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,11 @@ static void		set_texture_pixel(t_env *env, t_ray *ray, t_line *line)
 	}
 }
 
-static void		painting(t_env *env, t_ray *ray, t_line *line,
-							Uint32 worldMap[mapWidth][mapHeight])
+static void		painting(t_env *env, t_ray *ray, t_line *line, Uint32 **map)
 {
 	if (env->tex_mode)
 	{
-		line->tex_num = worldMap[ray->pos.x][ray->pos.y] - 1;
+		line->tex_num = map[ray->pos.x][ray->pos.y] - 1;
 		ray->wall_x = (line->side == 0) ? env->cam.pos.y + line->normal
 					* ray->dir.y : env->cam.pos.x + line->normal * ray->dir.x;
 		ray->wall_x -= floor(ray->wall_x);
@@ -53,10 +52,10 @@ static void		painting(t_env *env, t_ray *ray, t_line *line,
 	else
 		while (line->start_y < line->end_y)
 			env->img_buff[line->start_y++][line->x] =
-				chose_color(worldMap[ray->pos.x][ray->pos.y], line->side);
+				chose_color(map[ray->pos.x][ray->pos.y], line->side);
 }
 
-static void		draw_wall_line(t_env *env, Uint32 worldMap[mapWidth][mapHeight],
+static void		draw_wall_line(t_env *env, Uint32 **map,
 								t_ray *ray, t_line *line)
 {
 	t_cam	*cam;
@@ -68,7 +67,7 @@ static void		draw_wall_line(t_env *env, Uint32 worldMap[mapWidth][mapHeight],
 		ray->x_less ? ray->dist.x += ray->step.x : (ray->dist.y += ray->step.y);
 		ray->x_less ? ray->pos.x += cam->step.x : (ray->pos.y += cam->step.y);
 		line->side = ray->x_less ? 0 : 1;
-		if (worldMap[ray->pos.x][ray->pos.y] > 0)
+		if (map[ray->pos.x][ray->pos.y] > 0)
 			break;
 	}
 	line->normal = (!line->side)
@@ -81,7 +80,7 @@ static void		draw_wall_line(t_env *env, Uint32 worldMap[mapWidth][mapHeight],
 	line->end_y = (Uint32)((line->half + cam->center.y) >= WIN_HEIGHT
 		? WIN_HEIGHT - 1 : line->half + cam->center.y);
 	line->x = (Uint32)ray->x;
-	painting(env, ray, line, worldMap);
+	painting(env, ray, line, map);
 }
 
 static void		draw_floor_celling_line(t_env *env, t_ray *ray, t_line *line)
@@ -112,7 +111,7 @@ static void		draw_floor_celling_line(t_env *env, t_ray *ray, t_line *line)
 	}
 }
 
-void			raycasting(t_env *env, Uint32 worldMap[mapWidth][mapHeight])
+void			raycasting(t_env *env, Uint32 **map)
 {
 	t_ray	ray;
 	t_line	line;
@@ -135,7 +134,7 @@ void			raycasting(t_env *env, Uint32 worldMap[mapWidth][mapHeight])
 				? cam->pos.x - ray.pos.x : ray.pos.x + 1 - cam->pos.x);
 		ray.dist.y = ray.step.y * (ray.dir.y < 0
 				? cam->pos.y - ray.pos.y : ray.pos.y + 1 - cam->pos.y);
-		draw_wall_line(env, worldMap, &ray, &line);
+		draw_wall_line(env, map, &ray, &line);
 		draw_floor_celling_line(env, &ray, &line);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/18 20:21:52 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/19 19:53:18 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@
 # define DEF_FONT "fonts/ARIAL.TTF"
 # define DEF_FONT_SIZE 24
 # define FRAME_LIMIT 60 // todo change this in realtime
-# define mapWidth 24
-# define mapHeight 24
+//# define mapWidth 24
+//# define mapHeight 24
 # define tex_width 64
 # define tex_height 64
-# define texture_count 9
+# define texture_count 8
 # define WIDTH_ERR_SKIP 0
 
 # include <stdbool.h>
@@ -33,10 +33,12 @@
 # include "SDL_ttf.h"
 # include "SDL_image.h"
 # include "SDL_mixer.h"
+# include "SDL_audio.h"
 # include "../library/libft/libft.h"
 # include "get_next_line.h"
 # include <string.h>
 # include <errno.h>
+# define DEF_EDGE_TEX 2
 
 typedef struct	s_uint32_point
 {
@@ -131,15 +133,15 @@ typedef struct	s_camera
 	double			wall_scale;
 }			t_cam;
 
-typedef struct	s_wall
-{
-	Uint32	tex_id;
-
-	Uint32	n_side;
-	Uint32	w_side;
-	Uint32	e_side;
-	Uint32	s_side;
-}				t_wall;
+//typedef struct	s_wall
+//{
+//	Uint32	tex_id;
+//
+//	Uint32	n_side;
+//	Uint32	w_side;
+//	Uint32	e_side;
+//	Uint32	s_side;
+//}				t_wall;
 
 typedef struct	s_environment
 {
@@ -163,7 +165,9 @@ typedef struct	s_environment
 	SDL_Texture		*screen;
 	SDL_Surface		*surface;
 
-	t_wall			**map;
+	Mix_Music		*music;
+
+	Uint32			**map;
 	Uint32			map_height;
 	Uint32			map_width;
 	Uint32			map_center_y;
@@ -192,7 +196,7 @@ enum			e_errors
 
 t_env			*init_env();
 //int				display_interface();
-void			event_handler(t_env *env, Uint32 [mapWidth][mapHeight]);
+void			event_handler(t_env *env, Uint32 **map);
 Uint32 			chose_color(Uint32 switch_num, bool side);
 void			verLine(t_env *env, int x, int start, int end, int color);
 void			clear_img_buff(t_env *env);
@@ -200,10 +204,11 @@ void			clear_img_buff(t_env *env);
 void			frame_limit(Uint32 current_tick, Uint32 previous_tick,
 							Uint32 frame_limit_second);
 void			quit_program(t_env *env);
-void			raycasting(t_env *env,
-								Uint32 worldMap[mapWidth][mapHeight]);
+void			raycasting(t_env *env, Uint32 **map);
 Uint32			*chose_gen_or_image(t_env *env, Uint32 gen_id, Uint32 img_id);
 void			generate_texture(t_env *env);
 void			swap_px(t_env *env, Uint32 texSize);
 size_t			ft_cnt_words(char *str, size_t max_i, char separator);
+t_env			*parse_map(char *file_name, t_env *env);
+void			show_errors(t_env *env);
 #endif

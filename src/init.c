@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/18 19:50:42 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/19 19:13:41 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +109,10 @@ t_env		*env_def_val(t_env *env)
 	if (!env)
 		return (NULL);
 	env->game_over = false;
-	env->is_compass_texture = 1;
+	env->is_compass_texture = 0;
 	env->tex_mode = 2; //need to switch this in realtime (and correctly free)
-	env->cam.pos.x = 22;
-	env->cam.pos.y = 11.5;
+//	env->cam.pos.x = 1.5;
+//	env->cam.pos.y = 2;
 	env->cam.dir.x = -1;
 	env->cam.dir.y = 0;
 	env->cam.plane.x = 0;//need to change in real time (give psihodelic effect)
@@ -136,7 +136,6 @@ t_env		*env_def_val(t_env *env)
 	env->surfaces[5] = load_surface(env, "textures/mossy.png");
 	env->surfaces[6] = load_surface(env, "textures/wood.png");
 	env->surfaces[7] = load_surface(env, "textures/color_stone.png");
-	env->surfaces[8] = load_surface(env, "textures/color_stone.png");
 	if (env->error_code)
 		return (NULL);
 	env->txt.color = (SDL_Color){255, 255, 255, 0};
@@ -170,11 +169,23 @@ t_env	*init_env(void)
 	|| !(new_env->surfaces =
 			(SDL_Surface **)malloc(sizeof(SDL_Surface *) * texture_count))
 	|| !(new_env->txt.messageFont = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE))
-	|| !(env_def_val(new_env)))
+	|| (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048))
+	|| (new_env->music = Mix_LoadMUS("sounds/horst_wessel_lied.mp3"))
+//
+//
+ || !(env_def_val(new_env))
+ )
 	{
+
 		if (!new_env->error_code)
 			ft_putstr(SDL_GetError());
+		//new_env->error_code = 1;
 		//display_errors;
+
+	}
+	if (new_env->error_code)
+	{
+		show_errors(new_env);
 		quit_program(new_env);
 		return (NULL);
 	}

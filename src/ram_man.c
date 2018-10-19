@@ -53,6 +53,10 @@ void	quit_program(t_env *env)
 			SDL_FreeSurface(env->surface);
 			env->surface = NULL;
 		}
+//		if (env->music)
+//		{
+			Mix_CloseAudio();
+//		}
 		SDL_Quit();
 	}
 }
