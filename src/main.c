@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/19 17:51:09 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/20 16:40:28 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,20 @@
 
 void	show_errors(t_env *env)
 {
-	if (env->error_code == 404)
-		ft_putstr_fd("MAP_INVALID", 2);
-	if (env->error_code == 405)
+	if (env->error_num == 404)
+		ft_putstr_fd("MAP_ERR", 2);
+	if (env->error_num == 405)
 		ft_putstr_fd("WIDTH_ERR", 2);
-	if (env->error_code == 406)
+	if (env->error_num == 406)
 		ft_putstr_fd("FILE_ERR", 2);
-	if (env->error_code == 407)
+	if (env->error_num == 407)
 		ft_putstr_fd("COLOR_ERR", 2);
-	if (env->error_code && errno)
+	if (env->error_num && errno)
 		ft_putstr_fd(" - ", 2);
+	//need redefining error codes
 	if (errno)
 		ft_putstr_fd(strerror(errno), 2);
-	if (env->error_code || errno)
+	if (env->error_num || errno)
 		ft_putstr_fd("\n", 2);
 }
 
@@ -101,11 +102,11 @@ int			main(int argc, char **argv)
 		{
 			frame_rate_adjustment(env, &env->fps);
 			clear_img_buff(env);
-			raycasting(env, env->map);
+			raycasting(env, env->map.tex_id);
 			SDL_UpdateTexture(env->screen, NULL, env->img_buff, (WIN_WIDTH << 2));
 			SDL_RenderCopy(env->renderer, env->screen, NULL, NULL);
 			SDL_RenderPresent(env->renderer);
-			event_handler(env, env->map);
+			event_handler(env, env->map.tex_id);
 		}
 //----------------------------------------------
 /*

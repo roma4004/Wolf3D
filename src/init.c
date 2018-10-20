@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/19 19:13:41 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/20 17:50:48 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ SDL_Surface		*load_surface(t_env *env, char *path_name)
 	{
 		ft_putstr(SDL_GetError());
 		ft_putchar('\n');
-		env->error_code = INVALID_RESOURCE;
+		env->error_num = INVALID_RESOURCE;
 		return (NULL);
 	}
 	if (new_srf)
@@ -109,7 +109,7 @@ t_env		*env_def_val(t_env *env)
 	if (!env)
 		return (NULL);
 	env->game_over = false;
-	env->is_compass_texture = 0;
+	env->is_compass_texture = 1;
 	env->tex_mode = 2; //need to switch this in realtime (and correctly free)
 //	env->cam.pos.x = 1.5;
 //	env->cam.pos.y = 2;
@@ -136,13 +136,16 @@ t_env		*env_def_val(t_env *env)
 	env->surfaces[5] = load_surface(env, "textures/mossy.png");
 	env->surfaces[6] = load_surface(env, "textures/wood.png");
 	env->surfaces[7] = load_surface(env, "textures/color_stone.png");
-	if (env->error_code)
+	if (env->error_num)
 		return (NULL);
 	env->txt.color = (SDL_Color){255, 255, 255, 0};
 	env->txt.width = 0;
 	env->txt.height = 0;
-//	env->map_height = 24;
-//	env->map_width = 24;
+//	env->height = 24;
+//	env->width = 24;
+	env->cam.pos.x = 0;
+	env->cam.pos.y = 0;
+	env->map.empty_spaces = 0;
 	env->cam.min_wall_dist = 2.5;
 	return (env);
 }
@@ -152,7 +155,7 @@ t_env	*init_env(void)
 	t_env	*new_env;
 
 	if (!(new_env = (t_env *)malloc(sizeof(t_env)))
-	||  (new_env->error_code = 0)
+	||  (new_env->error_num = 0)
 	|| (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS))
 	|| (TTF_Init() == -1)
 	|| (!(new_env->window = SDL_CreateWindow(WIN_NAME, //SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -167,7 +170,7 @@ t_env	*init_env(void)
 	|| !(new_env->state = SDL_GetKeyboardState(&new_env->state_arr_length))
 	|| !(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)
 	|| !(new_env->surfaces =
-			(SDL_Surface **)malloc(sizeof(SDL_Surface *) * texture_count))
+			(SDL_Surface **)malloc(sizeof(SDL_Surface *) * TEXTURES))
 	|| !(new_env->txt.messageFont = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE))
 	|| (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048))
 	|| (new_env->music = Mix_LoadMUS("sounds/horst_wessel_lied.mp3"))
@@ -177,13 +180,13 @@ t_env	*init_env(void)
  )
 	{
 
-		if (!new_env->error_code)
+		if (!new_env->error_num)
 			ft_putstr(SDL_GetError());
-		//new_env->error_code = 1;
+		//new_env->error_num = 1;
 		//display_errors;
 
 	}
-	if (new_env->error_code)
+	if (new_env->error_num)
 	{
 		show_errors(new_env);
 		quit_program(new_env);

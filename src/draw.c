@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/19 18:04:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/20 17:24:02 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void		set_texture_pixel(t_env *env, t_ray *ray, t_line *line)
 		else if (line->side == 0 && ray->dir.x < 0) line->tex_num += 2;
 		else if (line->side == 1 && ray->dir.y > 0) line->tex_num += 3;
 		else if (line->side == 1 && ray->dir.y < 0) line->tex_num += 4;
-		line->tex_num %= texture_count;
+		line->tex_num %= TEXTURES;
 	}
 	while (++line->start_y < line->end_y)
 	{
@@ -65,6 +65,7 @@ static void		draw_wall_line(t_env *env, Uint32 **map,
 	{
 		ray->x_less = ray->dist.x < ray->dist.y;
 		ray->x_less ? ray->dist.x += ray->step.x : (ray->dist.y += ray->step.y);
+
 		ray->x_less ? ray->pos.x += cam->step.x : (ray->pos.y += cam->step.y);
 		line->side = ray->x_less ? 0 : 1;
 		if (map[ray->pos.x][ray->pos.y] > 0)

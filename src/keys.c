@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/19 17:58:26 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/20 21:45:26 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,6 @@ void		event_handler(t_env *env, Uint32 **map)
 	if (env->state[SDL_SCANCODE_Q])
 		rotate_x_cam(&env->cam, env->cam.rotate_speed,
 						env->cam.dir.x, env->cam.plane.x);
+	if (env->state[SDL_SCANCODE_1])
+		env->is_compass_texture = (env->is_compass_texture) ? 0 : 1;
 }

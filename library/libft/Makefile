@@ -12,7 +12,7 @@
 
 NAME = libft.a
 
-SRC = ft_append_list.c \
+SRC = ft_append_or_new_lst.c \
 	ft_atoi.c \
 	ft_atol_base.c \
 	ft_begin_trim.c \

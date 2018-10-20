@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/19 19:53:18 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/20 17:50:48 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 //# define mapHeight 24
 # define tex_width 64
 # define tex_height 64
-# define texture_count 8
-# define WIDTH_ERR_SKIP 0
+# define TEXTURES 8
+# define DEBUG 1
 
 # include <stdbool.h>
 # include <stdlib.h>
@@ -131,7 +131,7 @@ typedef struct	s_camera
 	double			rotate_speed;
 	t_uint32_pt		center;
 	double			wall_scale;
-}			t_cam;
+}				t_cam;
 
 //typedef struct	s_wall
 //{
@@ -141,7 +141,16 @@ typedef struct	s_camera
 //	Uint32	w_side;
 //	Uint32	e_side;
 //	Uint32	s_side;
-//}				t_wall;
+//}					t_wall;
+
+typedef struct	s_map
+{
+	Uint32		**tex_id;
+	Uint32		height;
+	Uint32		width;
+	Uint32		empty_spaces;
+	t_uint32_pt	center;
+}				t_map;
 
 typedef struct	s_environment
 {
@@ -152,7 +161,7 @@ typedef struct	s_environment
 	Uint8			bytes_per_pixel;
 	Uint8			bits_per_pixel;
 	Sint32			img_buff[WIN_HEIGHT][WIN_WIDTH];
-	Uint32			gen_texture[texture_count][tex_width * tex_height];
+	Uint32			gen_texture[TEXTURES][tex_width * tex_height];
 	const Uint8		*state;
 	t_cam			cam;
 	t_txt			txt;
@@ -166,13 +175,8 @@ typedef struct	s_environment
 	SDL_Surface		*surface;
 
 	Mix_Music		*music;
-
-	Uint32			**map;
-	Uint32			map_height;
-	Uint32			map_width;
-	Uint32			map_center_y;
-	Uint32			map_center_x;
-	Uint32			error_code;
+	t_map			map;
+	Uint32			error_num;
 }				t_env;
 
 enum			e_colors
@@ -186,11 +190,11 @@ enum			e_colors
 
 enum			e_errors
 {
-	MAP_INVALID = 404,
-	WIDTH_ERR = 405,
-	READ_ERR = 406,
-	COLOR_ERR = 407,
-	INVALID_RESOURCE = 408,
+	MAP_ERR = 404,
+	READ_ERR = 405,
+	WIDTH_ERR = 406,
+	INVALID_RESOURCE = 407,
+	SPACE = 408,
 	ITS_A_DIRECTORY = 21
 };
 
