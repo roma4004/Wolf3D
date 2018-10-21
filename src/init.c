@@ -6,65 +6,20 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/20 17:50:48 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/21 21:07:46 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-
-//#include "../library/frameworks/SDL2_image.framework/Headers/SDL_image.h"
-
-//static t_param	*init_param(void)
-//{
-//	t_param *new_param;
-//
-//	if ((new_param = (t_param *)malloc(sizeof(t_param))))
-//	{
-//		new_param->ratio = (int)(WIN_WIDTH / WIN_HEIGHT);
-//		new_param->center_x = (int)(WIN_WIDTH / 2);
-//		new_param->center_y = (int)(WIN_HEIGHT / 2);
-//		new_param->cores = ft_get_processors_num();
-//		new_param->threads = new_param->cores;
-//		new_param->spec_step = 1;
-//		new_param->offset_step = 0.5;
-//		new_param->fr_depth_step = 1;
-//		new_param->actial_zoom = 50;
-//		new_param->offset_x = 0;
-//		new_param->offset_y = 0;
-//		new_param->i_mouse_move_seed = 0;
-//		new_param->r_mouse_move_seed = 0;
-//		new_param->alpha_shift = 0;
-//		new_param->red_shift = 0;
-//		new_param->green_shift = 0;
-//		new_param->blue_shift = 0;
-//	}
-//	return (new_param);
-//}
-
-//int				flag_reset(t_flags *flags)
-//{
-//	if (!flags)
-//		return (0);
-//	ft_bzero(flags, sizeof(t_flags));
-//	return (1);
-//}
-
-//static t_flags	*init_flags(void)
-//{
-//	t_flags	*new_flags;
-//
-//	if ((new_flags = (t_flags *)malloc(sizeof(t_flags))))
-//		flag_reset(new_flags);
-//	return (new_flags);
-//}
 SDL_Surface		*load_surface(t_env *env, char *path_name)
 {
 	SDL_Surface			*new_srf;
 	SDL_Surface			*convert_srf;
 	SDL_PixelFormat		px_format;
 
-	new_srf = NULL;
+	if (!env || !path_name)
+		return (NULL);
 	px_format.format = SDL_PIXELFORMAT_ARGB8888;
 	px_format.palette = NULL;
 	px_format.BytesPerPixel = sizeof(Uint32);
@@ -74,8 +29,7 @@ SDL_Surface		*load_surface(t_env *env, char *path_name)
 	px_format.Bmask = 0;
 	px_format.Amask = 0;
 	if (!(new_srf = IMG_Load(path_name))
-	|| !(convert_srf = SDL_ConvertSurface(new_srf, &px_format, 0))
-	)
+	|| !(convert_srf = SDL_ConvertSurface(new_srf, &px_format, 0)))
 	{
 		ft_putstr(SDL_GetError());
 		ft_putchar('\n');
@@ -101,7 +55,7 @@ SDL_Surface		*load_surface(t_env *env, char *path_name)
 //{
 //	t_txt *new_text;
 //
-//	new_text.messageFont = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE)
+//	new_text.font = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE)
 //}
 
 t_env		*env_def_val(t_env *env)
@@ -110,24 +64,24 @@ t_env		*env_def_val(t_env *env)
 		return (NULL);
 	env->game_over = false;
 	env->is_compass_texture = 1;
-	env->tex_mode = 2; //need to switch this in realtime (and correctly free)
-//	env->cam.pos.x = 1.5;
-//	env->cam.pos.y = 2;
+	env->mode = 2; //need to switch this in realtime (and correctly free)
 	env->cam.dir.x = -1;
 	env->cam.dir.y = 0;
 	env->cam.plane.x = 0;//need to change in real time (give psihodelic effect)
 	env->cam.plane.y = 0.66; //the 2d raycaster version of camera plane
 	env->fps.current_tick = 0; //current_tick of current frame
 	env->fps.previous_tick = 0; //current_tick of previous frame
-	env->cam.center.x = WIN_WIDTH / 2;
-	env->cam.center.y = WIN_HEIGHT / 2;
+	env->cam.center.x = WIN_WIDTH >> 1;
+	env->cam.center.y = WIN_HEIGHT >> 1;
 	env->fps.frame_limit_second = 1000 / FRAME_LIMIT;
 	env->cam.zoom = 1;
 	env->bytes_per_pixel = sizeof(Uint32);
 	env->bits_per_pixel = env->bytes_per_pixel * (unsigned char)8;
 	env->cam.wall_scale = 1;
+	//env->fps.frames = 0;
+	env->win_height_x128 = WIN_HEIGHT * 128;
 	generate_texture(env);
-
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 	env->surfaces[0] = load_surface(env, "textures/eagle.png");
 	env->surfaces[1] = load_surface(env, "textures/red_brick.png");
 	env->surfaces[2] = load_surface(env, "textures/purple_stone.png");
@@ -141,8 +95,6 @@ t_env		*env_def_val(t_env *env)
 	env->txt.color = (SDL_Color){255, 255, 255, 0};
 	env->txt.width = 0;
 	env->txt.height = 0;
-//	env->height = 24;
-//	env->width = 24;
 	env->cam.pos.x = 0;
 	env->cam.pos.y = 0;
 	env->map.empty_spaces = 0;
@@ -171,20 +123,15 @@ t_env	*init_env(void)
 	|| !(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)
 	|| !(new_env->surfaces =
 			(SDL_Surface **)malloc(sizeof(SDL_Surface *) * TEXTURES))
-	|| !(new_env->txt.messageFont = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE))
-	|| (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048))
-	|| (new_env->music = Mix_LoadMUS("sounds/horst_wessel_lied.mp3"))
-//
-//
- || !(env_def_val(new_env))
- )
+	|| !(new_env->txt.font = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE))
+	|| (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	|| !(new_env->music = Mix_LoadMUS("sounds/horst_wessel_lied.wav"))
+	|| !(env_def_val(new_env)))
 	{
-
 		if (!new_env->error_num)
 			ft_putstr(SDL_GetError());
 		//new_env->error_num = 1;
 		//display_errors;
-
 	}
 	if (new_env->error_num)
 	{

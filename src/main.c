@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/20 16:40:28 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/21 21:30:41 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,15 @@ void	show_errors(t_env *env)
 	if (env->error_num == 404)
 		ft_putstr_fd("MAP_ERR", 2);
 	if (env->error_num == 405)
-		ft_putstr_fd("WIDTH_ERR", 2);
+		ft_putstr_fd("READ_ERR", 2);
 	if (env->error_num == 406)
-		ft_putstr_fd("FILE_ERR", 2);
+		ft_putstr_fd("WIDTH_ERR", 2);
 	if (env->error_num == 407)
-		ft_putstr_fd("COLOR_ERR", 2);
+		ft_putstr_fd("INVALID_RESOURCE", 2);
+	if (env->error_num == 408)
+		ft_putstr_fd("408", 2);
 	if (env->error_num && errno)
 		ft_putstr_fd(" - ", 2);
-	//need redefining error codes
 	if (errno)
 		ft_putstr_fd(strerror(errno), 2);
 	if (env->error_num || errno)
@@ -48,133 +49,36 @@ size_t	ft_cnt_words(char *str, size_t max_i, char separator)
 	return (num);
 }
 
-Uint32		*chose_gen_or_image(t_env *env, Uint32 gen_id, Uint32 img_id)
-{
-	return ((env->tex_mode == 1) ? env->gen_texture[gen_id]
-								 : env->surfaces[img_id]->pixels);
-}
 static void	frame_rate_adjustment(t_env *env, t_fps *fps)
 {
 	fps->previous_tick = fps->current_tick;
 	fps->current_tick = SDL_GetTicks();
-	fps->frame_time = (fps->current_tick - fps->previous_tick) / 1000.f;
-	env->cam.move_speed = fps->frame_time * 5; //in squares/second
-	env->cam.rotate_speed = fps->frame_time * 3; //in radians/second
+	fps->frame_time = (fps->current_tick - fps->previous_tick) / 1000.0f;
+	fps->value = (u_char)(1.0 / fps->frame_time);
+	env->cam.move_speed = fps->frame_time * 3; //in squares/second
+	env->cam.rotate_speed = fps->frame_time * 2; //in radians/second
+	env->cam.rotate_speed_mouse = fps->frame_time * 3; //in radians/second
 	if ((fps->frame_limit_second) > fps->current_tick - fps->previous_tick)
 		SDL_Delay(fps->frame_limit_second -
-				  (fps->current_tick - fps->previous_tick));
-	//prSint32f("%f\n", 1.0 / frame_time); //FPS counter
+			(fps->current_tick - fps->previous_tick));
 }
 
 int			main(int argc, char **argv)
 {
 	t_env	*env;
-//	Uint32	worldMap[mapWidth][mapHeight] =
-//	{
-//		{8,8,8,8,8,8,8,8,8,8,8,4,4,6,4,4,6,4,6,4,4,4,6,4},
-//		{8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,0,0,0,0,0,0,4},
-//		{8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,6},
-//		{8,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6},
-//		{8,0,3,3,0,0,0,0,0,8,8,4,0,0,0,0,0,0,0,0,0,0,0,4},
-//		{8,0,0,0,0,0,0,0,0,0,8,4,0,0,0,0,0,6,6,6,0,6,4,6},
-//		{8,8,8,8,0,8,8,8,8,8,8,4,4,4,4,4,4,6,0,0,0,0,0,6},
-//		{7,7,7,7,0,7,7,7,7,0,8,0,8,0,8,0,8,4,0,4,0,6,0,6},
-//		{7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,0,0,0,0,0,6},
-//		{7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,0,0,0,0,4},
-//		{7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,6,0,6,0,6,0,6},
-//		{7,7,0,0,0,0,0,0,7,8,0,8,0,8,0,8,8,6,4,6,0,6,6,6},
-//		{7,7,7,7,0,7,7,7,7,8,8,4,0,6,8,4,8,3,3,3,0,3,3,3},
-//		{2,2,2,2,0,2,2,2,2,4,6,4,0,0,6,0,6,3,0,0,0,0,0,3},
-//		{2,2,0,0,0,0,0,2,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3},
-//		{2,0,0,0,0,0,0,0,2,4,0,0,0,0,0,0,4,3,0,0,0,0,0,3},
-//		{1,0,0,0,0,0,0,0,1,4,4,4,4,4,6,0,6,3,3,0,0,0,3,3},
-//		{2,0,0,0,0,0,0,0,2,2,2,1,2,2,2,6,6,0,0,5,0,5,0,5},
-//		{2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5},
-//		{2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5},
-//		{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5},
-//		{2,0,0,0,0,0,0,0,2,0,0,0,0,0,2,5,0,5,0,5,0,5,0,5},
-//		{2,2,0,0,0,0,0,2,2,2,0,0,0,2,2,0,5,0,5,0,0,0,5,5},
-//		{2,2,2,2,1,2,2,2,2,2,2,1,2,2,2,5,5,5,5,5,5,5,5,5}
-//	};
 	if ((env = init_env()) && argc == 2 && parse_map(argv[1], env)
-		&& Mix_PlayMusic(env->music, 1))
+		&& !Mix_PlayMusic(env->music, 1))
 		while (!env->game_over)
 		{
+			SDL_RenderPresent(env->renderer);
 			frame_rate_adjustment(env, &env->fps);
 			clear_img_buff(env);
 			raycasting(env, env->map.tex_id);
-			SDL_UpdateTexture(env->screen, NULL, env->img_buff, (WIN_WIDTH << 2));
+			SDL_UpdateTexture(env->screen, NULL, env->img_buff, WIN_WIDTH << 2);
 			SDL_RenderCopy(env->renderer, env->screen, NULL, NULL);
-			SDL_RenderPresent(env->renderer);
-			event_handler(env, env->map.tex_id);
+			render_interface(env, &env->txt);
+			event_handler(env, &env->cam);
 		}
-//----------------------------------------------
-/*
-	SDL_Rect player_RECT;
-	player_RECT.x = 0;   //Смещение полотна по Х
-	player_RECT.y = 0;   //Смещение полотна по Y
-	player_RECT.w = 333; //Ширина полотна
-	player_RECT.h = 227; //Высота полотна
-
-	SDL_Rect background_RECT;
-	background_RECT.x = 0;
-	background_RECT.y = 0;
-	background_RECT.w = env->display_param.w;
-	background_RECT.h = env->display_param.h;
-	//display_interface(env);
-	while (!env->game_over)
-	{
-		SDL_UpdateTexture(env->screen, NULL, env->screen, WIN_WIDTH * sizeof
-		(Sint32));
-		SDL_RenderCopy(env->renderer, env->screen, NULL, NULL);
-
-			Sint32 messageTextLength = snprintf(NULL, 0, "FPS: %f",
-			env->fps.value);
-			char *messageText = (char *)malloc(messageTextLength + 1);
-			snprintf(messageText, messageTextLength + 1, "FPS: %f", env->fps.value);
-			SDL_Surface *messageSurface =
-					TTF_RenderUTF8_Blended(env->txt.messageFont, messageText,
-							env->txt.color);
-			if (messageSurface == NULL) {
-				printf("%s\n", SDL_GetError());
-				SDL_Quit();
-				return 1;
-			}
-			SDL_Texture *messageTexture =
-					SDL_CreateTextureFromSurface(env->renderer, messageSurface);
-			if (messageTexture == NULL) {
-				printf("%s\n", SDL_GetError());
-				SDL_Quit();
-				return 1;
-			}
-			if (TTF_SizeUTF8(env->txt.messageFont, messageText, &env->txt.width,
-					&env->txt.height) == -1) {
-				printf("%s\n", SDL_GetError());
-				SDL_Quit();
-				return 1;
-			}
-			env->txt.rect.x = 10;
-			env->txt.rect.y = 10;
-			env->txt.rect.w = env->txt.width;
-			env->txt.rect.h = env->txt.height;
-			SDL_RenderCopy(env->renderer, messageTexture, NULL, &env->txt.rect);
-			SDL_DestroyTexture(messageTexture);
-			SDL_FreeSurface(messageSurface);
-			free(messageText);
-
-		SDL_RenderPresent(env->renderer);
-	}
-	free(env->screen);
-*/
-	/* Select the color for drawing. It is set to red here. */
-//	SDL_SetRenderDrawColor(env->renderer, 255, 0, 0, 255);
-
-	/* Clear the entire screen to our selected color. */
-//	SDL_RenderClear(env->renderer);
-
-	/* Up until now everything was drawn behind the scenes.
-	   This will show the new, red contents of the window. */
-//	SDL_RenderPresent(env->renderer);
 	if (env)
 		quit_program(env);
 	return (0);

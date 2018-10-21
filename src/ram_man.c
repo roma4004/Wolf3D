@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/02 12:59:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/10 15:20:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/21 11:05:33 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,11 @@ void	quit_program(t_env *env)
 			SDL_FreeSurface(env->surface);
 			env->surface = NULL;
 		}
-//		if (env->music)
-//		{
+		if (env->music)
+		{
 			Mix_CloseAudio();
-//		}
+		}
+		show_errors(env);
 		SDL_Quit();
 	}
 }

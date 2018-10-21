@@ -6,14 +6,14 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/20 17:50:48 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/21 21:07:35 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
-# define WIN_WIDTH 1800
-# define WIN_HEIGHT 1200
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 768
 # define WIN_NAME "wolf3d by dromanic (@Dentair)"
 # define DEFAULT_MENU_COLOR 0x0f9100FF
 # define DEF_FONT "fonts/ARIAL.TTF"
@@ -21,10 +21,13 @@
 # define FRAME_LIMIT 60 // todo change this in realtime
 //# define mapWidth 24
 //# define mapHeight 24
-# define tex_width 64
-# define tex_height 64
+# define TEX_WIDTH 64
+# define TEX_HEIGHT 64
 # define TEXTURES 8
 # define DEBUG 1
+
+
+//strict max size of map
 
 # include <stdbool.h>
 # include <stdlib.h>
@@ -101,7 +104,7 @@ typedef struct	s_ray
 
 typedef struct	s_frame_per_second
 {
-	float		value;
+	u_char		value;
 	double		frame_time;
 	Uint32		frame_limit_second;
 	Uint32		current_tick;
@@ -113,9 +116,15 @@ typedef struct	s_text
 	int			width;
 	int			height;
 	char		text[3];
+	char		val[3];
 	SDL_Color	color;
-	SDL_Rect	rect;
-	TTF_Font	*messageFont;
+	SDL_Surface *sur_str;
+	SDL_Surface *sur_val;
+	SDL_Texture *tex_str;
+	SDL_Texture *tex_val;
+	SDL_Rect	rect_txt;
+	SDL_Rect	rect_val;
+	TTF_Font	*font;
 }				t_txt;
 
 typedef struct	s_camera
@@ -129,6 +138,7 @@ typedef struct	s_camera
 	double			move_speed;
 	double			min_wall_dist;
 	double			rotate_speed;
+	double			rotate_speed_mouse;
 	t_uint32_pt		center;
 	double			wall_scale;
 }				t_cam;
@@ -156,12 +166,12 @@ typedef struct	s_environment
 {
 	bool			game_over;
 	bool			is_compass_texture;
-	unsigned char	tex_mode;
+	unsigned char	mode;
 	int				state_arr_length;
 	Uint8			bytes_per_pixel;
 	Uint8			bits_per_pixel;
 	Sint32			img_buff[WIN_HEIGHT][WIN_WIDTH];
-	Uint32			gen_texture[TEXTURES][tex_width * tex_height];
+	Uint32			gen_tex[TEXTURES][TEX_WIDTH * TEX_HEIGHT];
 	const Uint8		*state;
 	t_cam			cam;
 	t_txt			txt;
@@ -169,14 +179,15 @@ typedef struct	s_environment
 	SDL_Surface		**surfaces;
 	SDL_DisplayMode	display_param;
 	SDL_Event		event;
+	SDL_Event		event_mouse;
 	SDL_Window		*window;
 	SDL_Renderer	*renderer;
 	SDL_Texture		*screen;
 	SDL_Surface		*surface;
-
 	Mix_Music		*music;
 	t_map			map;
 	Uint32			error_num;
+	Uint32			win_height_x128;
 }				t_env;
 
 enum			e_colors
@@ -199,8 +210,8 @@ enum			e_errors
 };
 
 t_env			*init_env();
-//int				display_interface();
-void			event_handler(t_env *env, Uint32 **map);
+int				render_interface(t_env *env, t_txt *txt);
+void			event_handler(t_env *env, t_cam *cam);
 Uint32 			chose_color(Uint32 switch_num, bool side);
 void			verLine(t_env *env, int x, int start, int end, int color);
 void			clear_img_buff(t_env *env);
@@ -209,7 +220,6 @@ void			frame_limit(Uint32 current_tick, Uint32 previous_tick,
 							Uint32 frame_limit_second);
 void			quit_program(t_env *env);
 void			raycasting(t_env *env, Uint32 **map);
-Uint32			*chose_gen_or_image(t_env *env, Uint32 gen_id, Uint32 img_id);
 void			generate_texture(t_env *env);
 void			swap_px(t_env *env, Uint32 texSize);
 size_t			ft_cnt_words(char *str, size_t max_i, char separator);

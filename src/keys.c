@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/20 21:45:26 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/21 21:22:46 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,50 @@ static void	rotate_x_cam(t_cam *cam, double rotate_speed,
 			old_plane_x * sin(rotate_speed) + cam->plane.y * cos(rotate_speed);
 }
 
-void		event_handler(t_env *env, Uint32 **map)
+static void		mouse_events(t_env *env, t_cam *cam)
 {
-	SDL_PumpEvents();
-	SDL_PollEvent(&env->event);
+	if (env->event.type != SDL_MOUSEMOTION)
+		return ;
+	if (env->event.motion.xrel > 3)
+		rotate_x_cam(cam, -cam->rotate_speed_mouse, cam->dir.x, cam->plane.x);
+	if (env->event.motion.xrel < -3)
+		rotate_x_cam(cam, cam->rotate_speed_mouse, cam->dir.x, cam->plane.x);
+	SDL_FlushEvent(SDL_MOUSEMOTION);
+}
+
+static void		keyboard_evens(t_env *env, t_cam *cam)
+{
 	if (env->event.type == SDL_QUIT || env->state[SDL_SCANCODE_ESCAPE])
 		env->game_over = true;
 	if (env->state[SDL_SCANCODE_W])
-		move(&env->cam, map, env->cam.dir.x, env->cam.dir.y);
+		move(&env->cam, env->map.tex_id, cam->dir.x, cam->dir.y);
 	if (env->state[SDL_SCANCODE_S])
-		move(&env->cam, map, -env->cam.dir.x, -env->cam.dir.y);
+		move(&env->cam, env->map.tex_id, -cam->dir.x, -cam->dir.y);
 	if	(env->state[SDL_SCANCODE_A])
-		move(&env->cam, map, -env->cam.plane.x, -env->cam.plane.y);
+		move(&env->cam, env->map.tex_id, -cam->plane.x, -cam->plane.y);
 	if (env->state[SDL_SCANCODE_D])
-		move(&env->cam, map, env->cam.plane.x, env->cam.plane.y);
+		move(&env->cam, env->map.tex_id, cam->plane.x, cam->plane.y);
 	if (env->state[SDL_SCANCODE_E])
-		rotate_x_cam(&env->cam, -env->cam.rotate_speed,
-						env->cam.dir.x, env->cam.plane.x);
+		rotate_x_cam(&env->cam, -cam->rotate_speed, cam->dir.x, cam->plane.x);
 	if (env->state[SDL_SCANCODE_Q])
-		rotate_x_cam(&env->cam, env->cam.rotate_speed,
-						env->cam.dir.x, env->cam.plane.x);
+		rotate_x_cam(&env->cam, cam->rotate_speed, cam->dir.x, cam->plane.x);
 	if (env->state[SDL_SCANCODE_1])
-		env->is_compass_texture = (env->is_compass_texture) ? 0 : 1;
+	{
+		env->is_compass_texture = (env->is_compass_texture) ? false : true;
+		SDL_Delay(42);
+	}
+	if (env->state[SDL_SCANCODE_2])
+	{
+		if (env->mode++ >= 2)
+			env->mode = 0;
+		SDL_Delay(42);
+	}
+	SDL_FlushEvent(SDL_KEYDOWN);
+}
+
+void			event_handler(t_env *env, t_cam *cam)
+{
+	SDL_PollEvent(&env->event);
+	keyboard_evens(env, cam);
+	mouse_events(env, cam);
 }
