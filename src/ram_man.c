@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/02 12:59:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/21 11:05:33 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/22 11:41:21 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	quit_program(t_env *env)
 		{
 			Mix_CloseAudio();
 		}
+		ft_putstr(SDL_GetError());
 		show_errors(env);
 		SDL_Quit();
 	}

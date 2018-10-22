@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/21 21:30:41 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/22 20:23:51 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,8 @@ static void	frame_rate_adjustment(t_env *env, t_fps *fps)
 	fps->current_tick = SDL_GetTicks();
 	fps->frame_time = (fps->current_tick - fps->previous_tick) / 1000.0f;
 	fps->value = (u_char)(1.0 / fps->frame_time);
-	env->cam.move_speed = fps->frame_time * 3; //in squares/second
-	env->cam.rotate_speed = fps->frame_time * 2; //in radians/second
-	env->cam.rotate_speed_mouse = fps->frame_time * 3; //in radians/second
+	env->cam.move_speed = fps->frame_time * 3;
+	env->cam.rotate_speed = fps->frame_time * 2;
 	if ((fps->frame_limit_second) > fps->current_tick - fps->previous_tick)
 		SDL_Delay(fps->frame_limit_second -
 			(fps->current_tick - fps->previous_tick));
@@ -78,6 +77,9 @@ int			main(int argc, char **argv)
 			SDL_RenderCopy(env->renderer, env->screen, NULL, NULL);
 			render_interface(env, &env->txt);
 			event_handler(env, &env->cam);
+
+
+
 		}
 	if (env)
 		quit_program(env);

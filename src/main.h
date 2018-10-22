@@ -6,14 +6,14 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/21 21:07:35 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/22 18:53:15 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
 # define WIN_NAME "wolf3d by dromanic (@Dentair)"
 # define DEFAULT_MENU_COLOR 0x0f9100FF
 # define DEF_FONT "fonts/ARIAL.TTF"
@@ -115,13 +115,11 @@ typedef struct	s_text
 {
 	int			width;
 	int			height;
-	char		text[3];
-	char		val[3];
+	char		str[3];
 	SDL_Color	color;
 	SDL_Surface *sur_str;
-	SDL_Surface *sur_val;
+	SDL_Surface *sur_con;
 	SDL_Texture *tex_str;
-	SDL_Texture *tex_val;
 	SDL_Rect	rect_txt;
 	SDL_Rect	rect_val;
 	TTF_Font	*font;
@@ -138,20 +136,15 @@ typedef struct	s_camera
 	double			move_speed;
 	double			min_wall_dist;
 	double			rotate_speed;
-	double			rotate_speed_mouse;
 	t_uint32_pt		center;
 	double			wall_scale;
+	bool			move_forward;
+	bool			move_backward;
+	bool			strafe_left;
+	bool			strafe_right;
+	bool			rotate_left;
+	bool			rotate_right;
 }				t_cam;
-
-//typedef struct	s_wall
-//{
-//	Uint32	tex_id;
-//
-//	Uint32	n_side;
-//	Uint32	w_side;
-//	Uint32	e_side;
-//	Uint32	s_side;
-//}					t_wall;
 
 typedef struct	s_map
 {
@@ -177,8 +170,8 @@ typedef struct	s_environment
 	t_txt			txt;
 	t_fps			fps;
 	SDL_Surface		**surfaces;
-	SDL_DisplayMode	display_param;
 	SDL_Event		event;
+	SDL_Event		my_event;
 	SDL_Event		event_mouse;
 	SDL_Window		*window;
 	SDL_Renderer	*renderer;
@@ -225,4 +218,5 @@ void			swap_px(t_env *env, Uint32 texSize);
 size_t			ft_cnt_words(char *str, size_t max_i, char separator);
 t_env			*parse_map(char *file_name, t_env *env);
 void			show_errors(t_env *env);
+void			move(t_cam *cam, Uint32 **map, double dir_x, double dir_y);
 #endif
