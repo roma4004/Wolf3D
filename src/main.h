@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/23 17:52:53 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 01:22:11 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,22 @@
 # define TEX_HEIGHT 64
 # define TEXTURES 8
 # define DEF_EDGE_TEX 2
-# define FPS 1
-# define DEBUG 1
+# define SHOW_FPS 1
+# define DEBUG 0
 # define MAX_MAP_SIDE 1000
 
 # include <stdbool.h>
 # include <stdlib.h>
 # include <math.h>
+# include <errno.h>
 
+# include "SDL.h"
 # include "SDL_ttf.h"
 # include "SDL_image.h"
 # include "SDL_mixer.h"
 # include "SDL_audio.h"
-# include "../library/libft/libft.h"
+# include "libft.h"
 # include "get_next_line.h"
-# include <string.h>
-# include <errno.h>
 
 typedef struct	s_uint32_point
 {
@@ -162,7 +162,7 @@ typedef struct	s_environment
 	Uint8			bits_per_pixel;
 	Uint32			err_id;
 	Uint32			win_height_x128;
-	Sint32			img_buff[WIN_HEIGHT][WIN_WIDTH];
+	Sint32			buff[WIN_HEIGHT][WIN_WIDTH];
 	Uint32			gen_tex[TEXTURES][TEX_WIDTH * TEX_HEIGHT];
 	const Uint8		*state;
 	t_flags			flags;
@@ -201,11 +201,10 @@ enum			e_errors
 t_env			*init_env();
 t_env			*parse_map(char *file_name, t_env *env);
 void			generate_texture(t_env *env);
-void			clear_img_buff(t_env *env);
 void			raycasting(t_env *env, Uint32 **map);
 Uint32			chose_color(Uint32 switch_num, bool side);
-int				render_interface(t_env *env, t_fps *fps, t_txt *cam);
 void			event_handler(t_env *env, t_cam *cam, t_flags *flags);
+int				render_interface(t_env *env, t_fps *fps, t_txt *cam);
 void			show_errors(t_env *env);
 void			quit_program(t_env *env);
 #endif

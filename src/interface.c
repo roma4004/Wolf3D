@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/24 14:48:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/23 17:57:54 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 01:21:21 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int			render_interface(t_env *env, t_fps *fps, t_txt *txt)
 	txt->rect_val.h = txt->height;
 	SDL_RenderCopy(env->renderer, txt->tex_str, NULL, &env->txt.rect_val);
 	SDL_DestroyTexture(txt->tex_str);
+	SDL_ClearError();
 	return (0);
 }
 
@@ -58,5 +59,13 @@ void		show_errors(t_env *env)
 		ft_putstr_fd(strerror(errno), 2);
 	if (env->err_id || errno)
 		ft_putstr_fd("\n", 2);
-	ft_putstr(SDL_GetError());
+	if (DEBUG)
+	{
+		if (ft_strcmp(SDL_GetError(), ""))
+		{
+			ft_putstr("SDL_LAST_ERROR - ");
+			ft_putstr(SDL_GetError());
+		}
+		ft_putchar('\n');
+	}
 }

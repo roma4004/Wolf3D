@@ -6,11 +6,51 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/23 17:53:04 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 01:35:26 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
+
+void			quit_program(t_env *env)
+{
+	if (!env)
+		return ;
+	if (env->screen)
+		SDL_DestroyTexture(env->screen);
+	env->screen = NULL;
+	if (env->renderer)
+		SDL_DestroyRenderer(env->renderer);
+	env->renderer = NULL;
+	if (env->window)
+		SDL_DestroyWindow(env->window);
+	env->window = NULL;
+	if (env->surface)
+		SDL_FreeSurface(env->surface);
+	env->surface = NULL;
+	if (env->music)
+		Mix_CloseAudio();
+	env->music = NULL;
+	show_errors(env);
+	SDL_Quit();
+}
+
+static void		clear_img_buff(t_env *env)
+{
+	Uint32	y;
+	Uint32	x;
+
+	if (!env)
+		return ;
+	y = 0;
+	while (y < WIN_HEIGHT)
+	{
+		x = 0;
+		while (x < WIN_WIDTH)
+			env->buff[y][x++] = 0x0;
+		y++;
+	}
+}
 
 static void		frame_rate_adjustment(t_env *env, t_fps *fps)
 {
@@ -36,12 +76,14 @@ int				main(int argc, char **argv)
 			event_handler(env, &env->cam, &env->flags);
 			clear_img_buff(env);
 			raycasting(env, env->map.tex_id);
-			SDL_UpdateTexture(env->screen, NULL, env->img_buff, WIN_WIDTH << 2);
+			SDL_UpdateTexture(env->screen, NULL, env->buff, WIN_WIDTH << 2);
 			SDL_RenderCopy(env->renderer, env->screen, NULL, NULL);
-			if (FPS)
+			if (SHOW_FPS)
 				render_interface(env, &env->fps, &env->txt);
 			SDL_RenderPresent(env->renderer);
 		}
+	if (argc != 2)
+		ft_putstr("Usage: ./wolf3d map.wmp\n");
 	if (env)
 		quit_program(env);
 	return (0);

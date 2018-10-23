@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/08/07 12:17:01 by dromanic          #+#    #+#              #
-#    Updated: 2018/10/23 17:51:45 by dromanic         ###   ########.fr        #
+#    Updated: 2018/10/24 00:45:44 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -106,7 +106,7 @@ $(NAME):
 	@ranlib $(NAME)
 
 clean:
-	@/bin/rm -f ./*.o
+	@/bin/rm -f ./$(OBJ)
 
 fclean: clean
 	@/bin/rm -f ./$(NAME)

@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-static int		convert_to_map(t_list *lst, t_map *map)
+static int			convert_to_map(t_list *lst, t_map *map)
 {
 	t_list	*cur;
 	char	*s;
@@ -38,7 +38,7 @@ static int		convert_to_map(t_list *lst, t_map *map)
 	return (0);
 }
 
-static int		get_map_param(t_env *env, t_map *map, t_list *lst)
+static int			get_map_param(t_env *env, t_map *map, t_list *lst)
 {
 	t_list	*cur;
 	char	*str;
@@ -67,8 +67,8 @@ static int		get_map_param(t_env *env, t_map *map, t_list *lst)
 	return (0);
 }
 
-Uint32			find_player_repair_map(t_env *env, t_double_pt *cam_pos,
-										Uint32 **map, Uint32 def_texture)
+static Uint32		find_player_repair_map(t_env *env, t_double_pt *cam_pos,
+											Uint32 **map, Uint32 def_texture)
 {
 	Uint32	x;
 	Uint32	y;
@@ -97,7 +97,7 @@ Uint32			find_player_repair_map(t_env *env, t_double_pt *cam_pos,
 	return (0);
 }
 
-static int		print_map(t_map *map, Uint32 **map_val)
+static int			print_map(t_map *map, Uint32 **map_val)
 {
 	Uint32	y;
 	Uint32	x;
@@ -123,7 +123,7 @@ static int		print_map(t_map *map, Uint32 **map_val)
 	return (0);
 }
 
-t_env			*parse_map(char *file_name, t_env *env)
+t_env				*parse_map(char *file_name, t_env *env)
 {
 	int		fd;
 	char	*buf;

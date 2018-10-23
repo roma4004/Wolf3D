@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 18:00:07 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/25 18:20:24 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/23 18:09:25 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,10 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
-# include <sys/stat.h>
-# include "../library/libft/libft.h"
+# include "libft.h"
 # define BUFF_SIZE 8192
 # define MAX_FD 10000
 
-int		get_next_line(const int fd, char **line);
+int			get_next_line(const int fd, char **line);
 
 #endif

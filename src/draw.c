@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/23 14:33:02 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/23 19:14:43 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void		set_texture_pixel(t_env *env, t_ray *ray,
 		line->tex_y = line->scale * TEX_HEIGHT / (Uint32)line->height / 256;
 		line->color = line->img[TEX_HEIGHT * line->tex_y + line->texture.x];
 		(line->side) ? line->color = (line->color >> 1) & 8355711 : 0;
-		env->img_buff[line->start_y][line->x] = line->color;
+		env->buff[line->start_y][line->x] = line->color;
 	}
 }
 
@@ -57,7 +57,7 @@ static void		painting(t_env *env, t_ray *ray, t_line *line, Uint32 **map)
 	}
 	else
 		while (line->start_y < line->end_y)
-			env->img_buff[line->start_y++][line->x] =
+			env->buff[line->start_y++][line->x] =
 				chose_color(map[ray->pos.x][ray->pos.y], (bool)line->side);
 }
 
@@ -90,7 +90,7 @@ static void		draw_wall_line(t_env *env, Uint32 **map,
 }
 
 static void		draw_floor_celling_line(t_env *env, t_ray *ray,
-										t_line *line, t_flags *flags)
+										t_line *line, t_flags *fl)
 {
 	line->start.x = ray->pos.x + ((!line->side && ray->dir.x < 0) ? 1 : 0);
 	line->start.y = ray->pos.y + ((line->side && ray->dir.y < 0) ? 1 : 0);
@@ -107,14 +107,14 @@ static void		draw_floor_celling_line(t_env *env, t_ray *ray,
 			+ (1 - line->weight) * env->cam.pos.y;
 		line->texture.x = (int)(line->coords.x * TEX_WIDTH) % TEX_WIDTH;
 		line->texture.y = (int)(line->coords.y * TEX_HEIGHT) % TEX_HEIGHT;
-		line->img =
-				flags->mode == 1 ? env->gen_tex[3] : env->img_tex[6]->pixels;
-		env->img_buff[line->start_y][(Uint32)ray->x] = (line->img
-			[TEX_WIDTH * line->texture.y + line->texture.x] >> 1) & 8355711;
-		line->img =
-				flags->mode == 1 ? env->gen_tex[6] : env->img_tex[3]->pixels;
-		env->img_buff[WIN_HEIGHT - line->start_y][(Uint32)ray->x] =
-			line->img[TEX_WIDTH * line->texture.y + line->texture.x];
+		line->img = fl->mode == 2 ? env->img_tex[6]->pixels : env->gen_tex[3];
+		env->buff[line->start_y][(Uint32)ray->x] = fl->mode == 0 ? 0x424242
+			: (line->img[TEX_WIDTH * line->texture.y + line->texture.x] >> 1)
+				& 8355711;
+		line->img = fl->mode == 2 ? env->img_tex[3]->pixels : env->gen_tex[6];
+		env->buff[WIN_HEIGHT - line->start_y][(Uint32)ray->x] =
+			fl->mode == 0 ? 0x7e00ff :
+				line->img[TEX_WIDTH * line->texture.y + line->texture.x];
 	}
 }
 
