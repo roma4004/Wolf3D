@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/08/07 12:17:01 by dromanic          #+#    #+#              #
-#    Updated: 2018/09/12 12:43:25 by dromanic         ###   ########.fr        #
+#    Updated: 2018/10/23 17:51:45 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,6 +68,7 @@ SRC = ft_append_or_new_lst.c \
 	ft_strjoin.c \
 	ft_strlcat.c \
 	ft_strlen.c \
+	ft_count_words.c \
 	ft_strmap.c \
 	ft_strmapi.c \
 	ft_strncat.c \

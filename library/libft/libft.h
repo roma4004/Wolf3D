@@ -65,6 +65,7 @@ long long		ft_atol_base(const char *str, int base);
 double			ft_pow(double num, int exp);
 size_t			ft_strlcat(char *dst, const char *src, size_t size);
 size_t			ft_strlen(const char *s);
+size_t			ft_count_words(char *str, size_t max_i, char separator);
 t_list			*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 t_list			*ft_lstnew(void const *content, size_t content_size);
 void			*ft_memalloc(size_t size);

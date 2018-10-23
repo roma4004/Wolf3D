@@ -6,13 +6,13 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:21:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/20 19:46:39 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/23 16:16:15 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-static int	convert_to_map(t_list *lst, t_map *map)
+static int		convert_to_map(t_list *lst, t_map *map)
 {
 	t_list	*cur;
 	char	*s;
@@ -32,42 +32,43 @@ static int	convert_to_map(t_list *lst, t_map *map)
 			i = (size_t)-1;
 			while (++i < cur->content_size)
 				map->tex_id[y][x++] =
-					(Uint32)ft_i_atoi(s, &i,cur->content_size);
+					(Uint32)ft_i_atoi(s, &i, cur->content_size);
 			cur = cur->next;
 		}
 	return (0);
 }
 
-static int	get_map_param(t_env *env, t_map *map, t_list *lst)
-{//again need to check
+static int		get_map_param(t_env *env, t_map *map, t_list *lst)
+{
 	t_list	*cur;
 	char	*str;
 	Uint32	i;
 	Uint32	width;
 
-	if (!(cur = lst) || !env)
+	if (!env || !map || !(cur = lst))
 		return (1);
-	while (cur && (str = cur->content) && (i = (Uint32)cur->content_size))
+	while (cur && (str = cur->content))
 	{
+		i = (Uint32)cur->content_size;
 		while (str && i && i--)
-			if (str[i] != ' ' && !ft_isdigit(str[i]))
-				env->error_num = MAP_ERR;
-		width = (Uint32)ft_cnt_words(str, cur->content_size, ' ');
-		if (map->width == 0)
-			map->width = width;
-		else if (map->width != width)
-			env->error_num = WIDTH_ERR;
+			if (str[i] != ' ' && !ft_isdigit(str[i]) && (env->err_id = MAP_ERR))
+				return (1);
+		width = (Uint32)ft_count_words(str, cur->content_size, ' ');
+		if ((map->width == 0 && !(map->width = width))
+		|| (map->width != width && (env->err_id = WIDTH_ERR)))
+			return (1);
 		cur = cur->next;
 	}
-	if ((map->height < 3 || map->width < 3) && (env->error_num = MAP_ERR))
+	if ((map->height < 3 || map->width < 3 || map->height > MAX_MAP_SIDE
+		|| map->width > MAX_MAP_SIDE) && (env->err_id = MAP_ERR))
 		return (1);
-	map->center.y = map->height / 2;
-	map->center.x = map->width / 2;
+	map->center.y = map->height >> 1;
+	map->center.x = map->width >> 1;
 	return (0);
 }
 
-Uint32		find_player_repair_map(t_env *env, t_double_pt *cam_pos,
-									Uint32 **map, Uint32 def_texture)
+Uint32			find_player_repair_map(t_env *env, t_double_pt *cam_pos,
+										Uint32 **map, Uint32 def_texture)
 {
 	Uint32	x;
 	Uint32	y;
@@ -92,22 +93,20 @@ Uint32		find_player_repair_map(t_env *env, t_double_pt *cam_pos,
 				map[y][x] = def_texture;
 		}
 		(!map[y][x] || map[y][x] > TEXTURES) ? map[y][x] = def_texture : 0;
-	}//	printf("height=%d width=%d\n", env->map.height, env->map.width);
+	}
 	return (0);
 }
-//9 9 9
-//9 9 9
-//9 9 9
-//calc empty space
-static int	print_map(t_map *map)
+
+static int		print_map(t_map *map, Uint32 **map_val)
 {
 	Uint32	y;
 	Uint32	x;
-	Uint32	**map_val;
 
-	if (!map || !DEBUG)
+	if (!map)
 		return (1);
-	map_val = map->tex_id;
+	if (!DEBUG)
+		return (0);
+	SDL_Log("height=%d width=%d\n", map->height, map->width);
 	y = 0;
 	while (y < map->height)
 	{
@@ -124,7 +123,7 @@ static int	print_map(t_map *map)
 	return (0);
 }
 
-t_env		*parse_map(char *file_name, t_env *env)
+t_env			*parse_map(char *file_name, t_env *env)
 {
 	int		fd;
 	char	*buf;
@@ -134,7 +133,7 @@ t_env		*parse_map(char *file_name, t_env *env)
 		return (NULL);
 	if ((fd = open(file_name, O_RDONLY)) == -1 || errno == ITS_A_DIRECTORY)
 	{
-		env->error_num = READ_ERR;
+		env->err_id = READ_ERR;
 		return (NULL);
 	}
 	while (get_next_line(fd, &buf) > 0
@@ -142,13 +141,13 @@ t_env		*parse_map(char *file_name, t_env *env)
 		ft_memdel((void *)&buf);
 	close(fd);
 	if (lst == NULL && !(errno))
-		env->error_num = MAP_ERR;
-	if (get_map_param(env, &env->map, lst) || env->error_num
+		env->err_id = MAP_ERR;
+	if (get_map_param(env, &env->map, lst) || env->err_id
 	|| convert_to_map(lst, &env->map) || ft_destroy_lst(lst)
 	|| find_player_repair_map(env, &env->cam.pos, env->map.tex_id,
 		(Uint32)DEF_EDGE_TEX < (Uint32)TEXTURES ? (Uint32)DEF_EDGE_TEX : 1)
-	|| print_map(&env->map)
-	|| ((env->cam.pos.x == 0 || env->cam.pos.x == 0) && (env->error_num = SPACE)))
+	|| print_map(&env->map, env->map.tex_id)
+	|| ((env->cam.pos.x == 0 || env->cam.pos.x == 0) && (env->err_id = SPACE)))
 		return (NULL);
 	return (env);
 }
