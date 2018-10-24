@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/24 14:48:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/24 01:21:21 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 17:23:03 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ void		show_errors(t_env *env)
 	if (env->err_id == 405)
 		ft_putstr_fd("READ_ERR", 2);
 	if (env->err_id == 406)
-		ft_putstr_fd("WIDTH_ERR", 2);
+		ft_putstr_fd("MAP_SIZE_ERR", 2);
 	if (env->err_id == 407)
 		ft_putstr_fd("INVALID_RESOURCE", 2);
 	if (env->err_id == 408)
-		ft_putstr_fd("408", 2);
+		ft_putstr_fd("NOT_ENOUGH_SPACE", 2);
 	if (env->err_id && errno)
 		ft_putstr_fd(" - ", 2);
 	if (errno)

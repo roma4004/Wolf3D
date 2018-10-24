@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/24 03:00:59 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 17:11:28 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # define DEF_EDGE_TEX 2
 # define SHOW_FPS 1
 # define DEBUG 0
-# define MAX_MAP_SIDE 1000
+# define MAX_MAP_SIDE 10000
 
 # include <stdbool.h>
 # include <stdlib.h>
@@ -192,7 +192,7 @@ enum			e_errors
 {
 	MAP_ERR = 404,
 	READ_ERR = 405,
-	WIDTH_ERR = 406,
+	MAP_SIZE_ERR = 406,
 	INVALID_RESOURCE = 407,
 	SPACE = 408,
 	ITS_A_DIRECTORY = 21

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:21:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/23 16:16:15 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 17:37:01 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ static int			get_map_param(t_env *env, t_map *map, t_list *lst)
 				return (1);
 		width = (Uint32)ft_count_words(str, cur->content_size, ' ');
 		if ((map->width == 0 && !(map->width = width))
-		|| (map->width != width && (env->err_id = WIDTH_ERR)))
+		|| (map->width != width && (env->err_id = MAP_SIZE_ERR)))
 			return (1);
 		cur = cur->next;
 	}
 	if ((map->height < 3 || map->width < 3 || map->height > MAX_MAP_SIDE
-		|| map->width > MAX_MAP_SIDE) && (env->err_id = MAP_ERR))
+		|| map->width > MAX_MAP_SIDE) && (env->err_id = MAP_SIZE_ERR))
 		return (1);
 	map->center.y = map->height >> 1;
 	map->center.x = map->width >> 1;
@@ -129,25 +129,25 @@ t_env				*parse_map(char *file_name, t_env *env)
 	char	*buf;
 	t_list	*lst;
 
-	if (!env || !file_name || (lst = NULL))
+	if ((!env || !file_name || (lst = NULL))
+	|| (((fd = open(file_name, O_RDONLY)) == -1 || errno == ITS_A_DIRECTORY)
+	&& (env->err_id = READ_ERR)))
 		return (NULL);
-	if ((fd = open(file_name, O_RDONLY)) == -1 || errno == ITS_A_DIRECTORY)
-	{
-		env->err_id = READ_ERR;
-		return (NULL);
-	}
 	while (get_next_line(fd, &buf) > 0
 	&& (ft_append_or_new_lst(&lst, buf, ft_strlen(buf))) && (++env->map.height))
+	{
+		if (env->map.height > MAX_MAP_SIDE && (env->err_id = MAP_SIZE_ERR))
+			break ;
 		ft_memdel((void *)&buf);
-	close(fd);
+	}
 	if (lst == NULL && !(errno))
-		env->err_id = MAP_ERR;
-	if (get_map_param(env, &env->map, lst) || env->err_id
+		env->err_id = READ_ERR;
+	if (close(fd) || get_map_param(env, &env->map, lst) || env->err_id
 	|| convert_to_map(lst, &env->map) || ft_destroy_lst(lst)
 	|| find_player_repair_map(env, &env->cam.pos, env->map.tex_id,
 		(Uint32)DEF_EDGE_TEX < (Uint32)TEXTURES ? (Uint32)DEF_EDGE_TEX : 1)
 	|| print_map(&env->map, env->map.tex_id)
-	|| ((env->cam.pos.x == 0 || env->cam.pos.x == 0) && (env->err_id = SPACE)))
+	|| ((!env->cam.pos.x || !env->cam.pos.y) && (env->err_id = SPACE)))
 		return (NULL);
 	return (env);
 }

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/24 03:15:13 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 17:31:44 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,28 +91,28 @@ static t_env		*env_def_val(t_env *env)
 
 t_env				*init_env(void)
 {
-	t_env	*new_env;
+	t_env	*env;
 
-	if (!(new_env = (t_env *)malloc(sizeof(t_env)))
+	if ((!(env = (t_env *)malloc(sizeof(t_env)))
+		&& (env->map.height = 0))
 	|| SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS)
 	|| TTF_Init() || !IMG_Init(IMG_INIT_PNG)
-	|| !(new_env->window = SDL_CreateWindow(WIN_NAME, SDL_WINDOWPOS_UNDEFINED,
+	|| !(env->window = SDL_CreateWindow(WIN_NAME, SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_RESIZABLE))
-	|| !(new_env->renderer = SDL_CreateRenderer(new_env->window, -1,
+	|| !(env->renderer = SDL_CreateRenderer(env->window, -1,
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC))
-	|| !(new_env->screen = SDL_CreateTexture(new_env->renderer,
+	|| !(env->screen = SDL_CreateTexture(env->renderer,
 		SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
 		WIN_WIDTH, WIN_HEIGHT))
-	|| !(new_env->state = SDL_GetKeyboardState(&new_env->state_arr_length))
-	|| !(new_env->img_tex =
-			(SDL_Surface **)malloc(sizeof(SDL_Surface *) * TEXTURES))
-	|| !(new_env->txt.font = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE))
+	|| !(env->state = SDL_GetKeyboardState(&env->state_arr_length))
+	|| !(env->img_tex = malloc(sizeof(SDL_Surface *) * TEXTURES))
+	|| !(env->txt.font = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE))
 	|| (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-	|| !(new_env->music = Mix_LoadMUS("resource/sounds/horst_wessel_lied.wav"))
-	|| !(env_def_val(new_env)))
+	|| !(env->music = Mix_LoadMUS("resource/sounds/horst_wessel_lied.wav"))
+	|| !(env_def_val(env)))
 	{
-		quit_program(new_env);
+		quit_program(env);
 		return (NULL);
 	}
-	return (new_env);
+	return (env);
 }
