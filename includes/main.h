@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/24 01:22:11 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 03:00:59 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # define WIN_HEIGHT 1080
 # define WIN_NAME "wolf3d by dromanic (@Dentair)"
 # define DEFAULT_MENU_COLOR 0x0f9100FF
-# define DEF_FONT "fonts/ARIAL.TTF"
+# define DEF_FONT "resource/fonts/ARIAL.TTF"
 # define DEF_FONT_SIZE 24
 # define FRAME_LIMIT 60
 # define TEX_WIDTH 64

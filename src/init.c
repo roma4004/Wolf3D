@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/24 00:31:35 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 03:15:13 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,14 @@ static void			init_cam(t_cam *cam)
 
 static void			init_img_tex(t_env *env, SDL_Surface **img_tex)
 {
-	img_tex[0] = load_surface(env, "textures/eagle.png");
-	img_tex[1] = load_surface(env, "textures/red_brick.png");
-	img_tex[2] = load_surface(env, "textures/purple_stone.png");
-	img_tex[3] = load_surface(env, "textures/grey_stone.png");
-	img_tex[4] = load_surface(env, "textures/blue_stone.png");
-	img_tex[5] = load_surface(env, "textures/mossy.png");
-	img_tex[6] = load_surface(env, "textures/wood.png");
-	img_tex[7] = load_surface(env, "textures/color_stone.png");
+	img_tex[0] = load_surface(env, "resource/textures/eagle.png");
+	img_tex[1] = load_surface(env, "resource/textures/red_brick.png");
+	img_tex[2] = load_surface(env, "resource/textures/purple_stone.png");
+	img_tex[3] = load_surface(env, "resource/textures/grey_stone.png");
+	img_tex[4] = load_surface(env, "resource/textures/blue_stone.png");
+	img_tex[5] = load_surface(env, "resource/textures/mossy.png");
+	img_tex[6] = load_surface(env, "resource/textures/wood.png");
+	img_tex[7] = load_surface(env, "resource/textures/color_stone.png");
 }
 
 static t_env		*env_def_val(t_env *env)
@@ -108,7 +108,7 @@ t_env				*init_env(void)
 			(SDL_Surface **)malloc(sizeof(SDL_Surface *) * TEXTURES))
 	|| !(new_env->txt.font = TTF_OpenFont(DEF_FONT, DEF_FONT_SIZE))
 	|| (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-	|| !(new_env->music = Mix_LoadMUS("sounds/horst_wessel_lied.wav"))
+	|| !(new_env->music = Mix_LoadMUS("resource/sounds/horst_wessel_lied.wav"))
 	|| !(env_def_val(new_env)))
 	{
 		quit_program(new_env);
