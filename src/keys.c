@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 15:22:29 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/23 14:53:43 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 05:43:35 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,32 +61,31 @@ static void		mouse_events(SDL_Event *event, t_cam *cam)
 		cam->zoom = 1;
 }
 
-static void		keyboard_evens(SDL_Event *event, SDL_Keycode key,
-								t_flags *flags)
+static void		keyboard_evens(SDL_Event *event, SDL_Keycode k, t_flags *f)
 {
 	bool	*flag;
 
 	if (event->type == SDL_KEYDOWN
-		&& ((key == SDLK_ESCAPE && (flag = &flags->is_game_over))
-			|| (key == SDLK_w && (flag = &flags->is_move_forward))
-			|| (key == SDLK_s && (flag = &flags->is_move_backward))
-			|| (key == SDLK_a && (flag = &flags->is_strafe_left))
-			|| (key == SDLK_d && (flag = &flags->is_strafe_right))
-			|| (key == SDLK_q && (flag = &flags->is_rotate_left))
-			|| (key == SDLK_e && (flag = &flags->is_rotate_right))))
+	&& ((k == SDLK_ESCAPE && (flag = &f->is_game_over))
+		|| ((k == SDLK_q || k == SDLK_LEFT) && (flag = &f->is_rotate_left))
+		|| ((k == SDLK_e || k == SDLK_RIGHT) && (flag = &f->is_rotate_right))
+		|| ((k == SDLK_w || k == SDLK_UP) && (flag = &f->is_move_forward))
+		|| ((k == SDLK_s || k == SDLK_DOWN) && (flag = &f->is_move_backward))
+		|| (k == SDLK_a && (flag = &f->is_strafe_left))
+		|| (k == SDLK_d && (flag = &f->is_strafe_right))))
 		*flag = true;
-	if (event->type == SDL_KEYUP && key == SDLK_2 && flags->mode++ >= 2)
-		flags->mode = 0;
-	if (event->type == SDL_KEYUP && key == SDLK_1)
-		flags->is_compass_texture = (flags->is_compass_texture) ? false : true;
+	if (event->type == SDL_KEYUP && k == SDLK_2 && f->mode++ >= 2)
+		f->mode = 0;
+	if (event->type == SDL_KEYUP && k == SDLK_1)
+		f->is_compass_texture = (f->is_compass_texture) ? false : true;
 	if (event->type == SDL_KEYUP
-		&& ((key == SDLK_ESCAPE && (flag = &flags->is_game_over))
-			|| (key == SDLK_w && (flag = &flags->is_move_forward))
-			|| (key == SDLK_s && (flag = &flags->is_move_backward))
-			|| (key == SDLK_a && (flag = &flags->is_strafe_left))
-			|| (key == SDLK_d && (flag = &flags->is_strafe_right))
-			|| (key == SDLK_q && (flag = &flags->is_rotate_left))
-			|| (key == SDLK_e && (flag = &flags->is_rotate_right))))
+	&& ((k == SDLK_ESCAPE && (flag = &f->is_game_over))
+		|| ((k == SDLK_q || k == SDLK_LEFT) && (flag = &f->is_rotate_left))
+		|| ((k == SDLK_e || k == SDLK_RIGHT) && (flag = &f->is_rotate_right))
+		|| ((k == SDLK_w || k == SDLK_UP) && (flag = &f->is_move_forward))
+		|| ((k == SDLK_s || k == SDLK_DOWN) && (flag = &f->is_move_backward))
+		|| (k == SDLK_a && (flag = &f->is_strafe_left))
+		|| (k == SDLK_d && (flag = &f->is_strafe_right))))
 		*flag = false;
 }
 
