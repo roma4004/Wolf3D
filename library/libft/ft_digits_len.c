@@ -1,30 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_digits_len.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/18 22:11:49 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/03 11:41:21 by dromanic         ###   ########.fr       */
+/*   Created: 2017/11/19 17:08:30 by dromanic          #+#    #+#             */
+/*   Updated: 2018/11/03 13:47:56 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
 #include "libft.h"
 
-void	ft_lstdelone(t_list **alst, void (*del)(void *, size_t))
+size_t	ft_digits_len(const char *s)
 {
-	t_list	*head;
-	t_list	*cur_node;
+	size_t	i;
+	size_t	len;
 
-	if (!alst || !del || !(head = *alst))
-		return ;
-	if (head)
-	{
-		cur_node = head->next;
-		del(head, head->content_size);
-		head = cur_node;
-	}
-	*alst = NULL;
+	i = 0;
+	len = 0;
+	while (s[i++])
+		if (s[i] >= '0' && s[i] <= '9')
+			len++;
+	return (len);
 }

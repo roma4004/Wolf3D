@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 20:23:24 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/26 21:08:55 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 12:44:24 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 char	*ft_strtrim(char const *s)
 {
-	int		i;
-	int		len;
-	char	*alloc;
+	long long int	i;
+	long long int	len;
+	char			*alloc;
 
 	if (s == NULL)
 		return (NULL);
@@ -29,8 +29,7 @@ char	*ft_strtrim(char const *s)
 		len--;
 	if (len <= 0)
 		len = 0;
-	alloc = (char *)malloc(sizeof(char) * (len + sizeof(char)));
-	if (alloc == NULL)
+	if (!(alloc = (char *)malloc(sizeof(char) * (len + 1))))
 		return (NULL);
 	s += i;
 	i = -1;

@@ -6,20 +6,19 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 21:23:06 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/25 19:36:44 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/02 20:18:59 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 char	*ft_strcpy(char *dest, const char *src)
 {
-	unsigned int	i;
+	size_t	i;
 
-	i = 0;
-	while (src[i])
-	{
+	i = -1;
+	while (src[++i])
 		dest[i] = src[i];
-		i++;
-	}
 	dest[i] = src[i];
 	return (dest);
 }

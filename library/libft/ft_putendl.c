@@ -6,22 +6,15 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 21:47:11 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/19 19:31:16 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/02 20:55:33 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
 void	ft_putendl(char const *s)
 {
-	unsigned int i;
-
 	if (!s)
 		return ;
-	i = -1;
-	while (s[++i])
-	{
-		write(1, &s[i], 1);
-	}
-	write(1, "\n", 1);
+	ft_putendl_fd(s, 1);
 }

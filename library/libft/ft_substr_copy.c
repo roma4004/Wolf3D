@@ -1,27 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_substring_copy.c                                :+:      :+:    :+:   */
+/*   ft_substr_copy.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/20 14:50:10 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/25 16:03:16 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/02 19:55:44 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_substr_copy(char *dst, char *src, unsigned int *src_i, char stop_sym)
-{
-	unsigned int i;
+#include "libft.h"
 
-	i = 0;
-	if (dst && src)
+void	ft_substr_copy(char *dst, char *src, size_t *i, char stop_sym)
+{
+	size_t	j;
+
+	if (!dst || !src)
+		return ;
+	j = 0;
+	while (src[*i] && dst[j])
 	{
-		while (src[*src_i] && dst[i])
-		{
-			if (src[*src_i] == stop_sym)
-				return ;
-			dst[i++] = src[*src_i++];
-		}
+		if (src[*i] == stop_sym)
+			return ;
+		dst[j++] = src[(*i)++];
 	}
 }

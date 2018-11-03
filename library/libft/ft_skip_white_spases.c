@@ -6,14 +6,15 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/19 14:52:19 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/19 15:03:48 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 22:53:52 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_skip_white_spases(const char *str, int *i)
+#include <string.h>
+
+void	ft_skip_white_spases(const char *str, size_t *i)
 {
-	while (str[*i] < 32)
-	{
+	while (str[*i] == '\t' || str[*i] == '\n' || str[*i] == '\r'
+		|| str[*i] == ' ' || str[*i] == '\v' || str[*i] == '\f')
 		(*i)++;
-	}
 }

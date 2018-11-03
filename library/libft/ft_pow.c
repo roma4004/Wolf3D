@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
 double	ft_pow(double num, int exp)
 {
 	double	result;

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/15 16:10:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/15 16:35:22 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 22:31:11 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,15 @@ long long	ft_i_atoi(const char *str, size_t *i, size_t max_i)
 	while (*i < max_i
 	&& (str[*i] == '\t' || str[*i] == '\n' || str[*i] == '\r'
 		|| str[*i] == ' ' || str[*i] == '\v' || str[*i] == '\f'))
-		*i = *i + 1;
-	if (*i < max_i && (str[*i] == '-'))
-		sign = -1;
-	if (*i < max_i && (str[*i] == '-' || str[*i] == '+'))
-		*i = *i + 1;
-	while (*i < max_i && str[*i] >= '0' && str[*i] <= '9')
+		(*i)++;
+	if (*i < max_i)
+	{
+		if (str[*i] == '-')
+			sign = -1;
+		if (str[*i] == '-' || str[*i] == '+')
+			(*i)++;
+	}
+	while (*i < max_i && ft_isdigit(str[*i]))
 		result = result * 10 + (int)str[(*i)++] - '0';
-	if (result > 9223372036854775807U && sign == 1)
-		return (-1);
-	if (result > 9223372036854775808U && sign == -1)
-		return (0);
 	return (result * sign);
 }

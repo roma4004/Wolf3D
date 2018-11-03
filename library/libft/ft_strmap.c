@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 21:04:32 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/29 15:32:32 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/02 21:13:36 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,9 @@ char	*ft_strmap(char const *s, char (*f)(char))
 	size_t	i;
 	char	*alloc;
 
-	if (s == NULL || f == NULL)
+	if (!s || !f)
 		return (NULL);
-	alloc = NULL;
-	alloc = ft_strnew(ft_strlen(s));
-	if (alloc)
+	if ((alloc = ft_strnew(ft_strlen(s))))
 	{
 		i = 0;
 		while (s[i])

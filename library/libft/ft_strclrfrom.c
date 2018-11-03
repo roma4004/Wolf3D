@@ -15,8 +15,5 @@
 void	ft_strclrfrom(char *alloc, int i, int len)
 {
 	while (i < len)
-	{
-		alloc[i] = '\0';
-		i++;
-	}
+		alloc[i++] = '\0';
 }

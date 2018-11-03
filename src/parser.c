@@ -67,7 +67,7 @@ static int			get_map_param(t_env *env, t_map *map, t_list *lst)
 	return (0);
 }
 
-static Uint32		find_player_repair_map(t_env *env, t_double_pt *cam_pos,
+static Uint32		find_player_map_repair(t_env *env, t_double_pt *cam_pos,
 											Uint32 **map, Uint32 def_texture)
 {
 	Uint32	x;
@@ -144,7 +144,7 @@ t_env				*parse_map(char *file_name, t_env *env)
 		env->err_id = READ_ERR;
 	if (close(fd) || get_map_param(env, &env->map, lst) || env->err_id
 	|| convert_to_map(lst, &env->map) || ft_destroy_lst(lst)
-	|| find_player_repair_map(env, &env->cam.pos, env->map.tex_id,
+	|| find_player_map_repair(env, &env->cam.pos, env->map.tex_id,
 		(Uint32)DEF_EDGE_TEX < (Uint32)TEXTURES ? (Uint32)DEF_EDGE_TEX : 1)
 	|| print_map(&env->map, env->map.tex_id)
 	|| ((!env->cam.pos.x || !env->cam.pos.y) && (env->err_id = SPACE)))

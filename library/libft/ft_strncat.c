@@ -6,16 +6,17 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 21:05:53 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/25 22:08:07 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/02 20:23:30 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
 #include "libft.h"
 
 char	*ft_strncat(char *dest, const char *src, size_t n)
 {
-	unsigned int	i;
-	unsigned int	j;
+	size_t	i;
+	size_t	j;
 
 	if (n > 0)
 	{

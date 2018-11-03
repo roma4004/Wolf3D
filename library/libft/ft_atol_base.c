@@ -24,7 +24,7 @@ static long long	ft_atol_base2(const char *str, int base)
 	i = 0;
 	while (str[i] && (tmp = (char *)ft_memchr(dig, ft_tolower(str[i]), base)))
 	{
-		res = (res * base) + (tmp - dig);
+		res = (long long int)((res * base) + (tmp - dig));
 		i++;
 	}
 	return (res);
@@ -33,10 +33,9 @@ static long long	ft_atol_base2(const char *str, int base)
 long long			ft_atol_base(const char *str, int base)
 {
 	long long	result;
-	char		sign;
+	int			sign;
 	int			i;
 
-	sign = 1;
 	i = 0;
 	result = 0;
 	if (!str || base < 2 || base > 36)

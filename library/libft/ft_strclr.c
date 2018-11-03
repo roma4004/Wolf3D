@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 21:27:35 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/19 17:32:04 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/02 20:01:31 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,11 @@
 
 void	ft_strclr(char *s)
 {
-	unsigned int	i;
-	unsigned int	len;
+	size_t	len;
 
-	i = 0;
-	len = 0;
-	if (s)
-	{
-		while (s[len])
-			len++;
-		while (i < len)
-		{
-			s[i] = '\0';
-			i++;
-		}
-	}
+	if (!s)
+		return ;
+	len = ft_strlen(s);
+	while (len)
+		s[--len] = '\0';
 }

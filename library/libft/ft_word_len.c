@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split_count_str.c                               :+:      :+:    :+:   */
+/*   ft_word_len.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 21:31:13 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/26 21:46:09 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/02 18:23:26 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
+#include "libft.h"
 
-int		ft_split_count_str(char const *s, char c)
+size_t	ft_word_len(const char *str, char c)
 {
-	unsigned int i;
-	unsigned int str_cnt;
+	size_t	len;
 
-	i = 0;
-	str_cnt = 0;
-	if (s == NULL)
+	if (!str)
 		return (0);
-	while (s[i])
-	{
-		if (s[i] == c && s[i + 1] != c)
-			str_cnt++;
-		i++;
-	}
-	if (s[0] != '\0')
-		str_cnt++;
-	return (str_cnt);
+	len = 0;
+	while (str[len] && str[len] != c)
+		len++;
+	return (len);
 }

@@ -6,22 +6,20 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 22:25:04 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/29 18:24:36 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 13:57:52 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_end_trim(const char *str)
+size_t	ft_end_trim(const char *str)
 {
-	unsigned int len;
+	size_t len;
 
-	len = 0;
-	if (str)
-	{
-		len = ft_strlen(str) - 1;
-		while (str[len] == ' ' || str[len] == '\t' || str[len] == '\n')
-			len--;
-	}
+	if (!str)
+		return (0);
+	len = ft_strlen(str);
+	while (str[len] == ' ' || str[len] == '\t' || str[len] == '\n')
+		--len;
 	return (len);
 }

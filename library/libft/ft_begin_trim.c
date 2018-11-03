@@ -6,13 +6,15 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 20:49:38 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/26 20:27:04 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 14:02:47 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_begin_trim(const char *str)
+#include "string.h"
+
+size_t	ft_begin_trim(const char *str)
 {
-	unsigned int i;
+	size_t	i;
 
 	i = 0;
 	if (str)

@@ -6,29 +6,25 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/19 17:08:30 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/26 22:47:46 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 13:54:33 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 
-char	*ft_get_word(const char *str, size_t *start_iter, char c)
+char	*ft_get_word(const char *str, size_t *str_i, char c)
 {
 	char	*word;
 	int		i;
 
-	if (!(word = (char *)malloc(sizeof(char) * (ft_strlen(str)))))
+	if (!str || !str_i)
+		return (NULL);
+	if (!(word = (char *)malloc(sizeof(char) * (ft_word_len(str + *str_i, c)))))
 		return (NULL);
 	i = 0;
-	while (str[*start_iter] != c && str[*start_iter])
-	{
-		word[i] = str[*start_iter];
-		i++;
-		*start_iter += 1;
-	}
+	while (str[*str_i] != c && str[*str_i])
+		word[i++] = str[(*str_i)++];
 	word[i] = '\0';
-	while (str[*start_iter] == c && str[*start_iter])
-		*start_iter += 1;
 	return (word);
 }

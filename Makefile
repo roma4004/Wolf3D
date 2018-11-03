@@ -6,15 +6,15 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/10/24 04:03:32 by dromanic         ###   ########.fr        #
+#    Updated: 2018/11/03 15:58:34 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = wolf3d
 
-GC = gcc   -O3 -Ipthreads -Wall -Wextra -Werror -framework OpenGL
-CM = cmake -O3 -Ipthreads -Wall -Wextra -Werror -framework OpenGL
-CL = clang -O3 -Ipthreads -Wall -Wextra -Werror -framework OpenGL
+GC = gcc   -O3 -Ipthreads -Wall -Wextra -Werror
+CM = cmake -O3 -Ipthreads -Wall -Wextra -Werror
+CL = clang -O3 -Ipthreads -Wall -Wextra -Werror
 
 [[ $1 = "clang" ]] && CC=CL || CC=GC
 [[ $1 = "cmake" ]] && CC=CM || CC=GC
@@ -45,7 +45,7 @@ IMG_PATH = $(PROJ_LIB_PATH)/$(IMG_LIB_NAME)/$(IMG_VER)
 MIX_PATH = $(PROJ_LIB_PATH)/$(MIX_LIB_NAME)/$(MIX_VER)
 
 PRJ_INC = -I $(PROJ_INC_PATH)
-LFT_INC = -I $(LFT_PATH)
+LFT_INC = -I $(LFT_PATH)/includes
 SDL_INC = -I $(SDL_PATH)/$(SDL2_INC_PATH)
 TTF_INC = -I $(TTF_PATH)/$(SDL2_INC_PATH)
 IMG_INC = -I $(IMG_PATH)/$(SDL2_INC_PATH)
@@ -119,10 +119,10 @@ normall:
 	norminette $(NORMFLAGS) $(PROJ_INC_PATH)/*.h
 
 normsall:
-	@norminette $(NORMFLAGS) $(LFT_PATH)/*.c # | grep -E '^(Error|Warning)'
-	@norminette $(NORMFLAGS) $(LFT_PATH)/*.h # | grep -E '^(Error|Warning)'
-	@norminette $(NORMFLAGS) $(PROJ_SRC_PATH)/*.c # | grep -E '^(Error|Warning)'
-	@norminette $(NORMFLAGS) $(PROJ_INC_PATH)/*.h # | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(LFT_PATH)/*.c  | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(LFT_PATH)/*.h  | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(PROJ_SRC_PATH)/*.c  | grep -E '^(Error|Warning)'
+	@norminette $(NORMFLAGS) $(PROJ_INC_PATH)/*.h  | grep -E '^(Error|Warning)'
 
 normf:
 	@norminette $(NORMFLAGS) # | grep -E '^(Error|Warning)'

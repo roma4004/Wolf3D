@@ -12,7 +12,7 @@
 
 #include "main.h"
 
-SDL_Surface			*load_surface(t_env *env, char *path_name)
+static SDL_Surface		*load_surface(t_env *env, char *path_name)
 {
 	SDL_Surface			*new_srf;
 	SDL_Surface			*convert_srf;
@@ -52,7 +52,7 @@ static void			init_cam(t_cam *cam)
 	cam->min_wall_dist = 2.5;
 }
 
-static void			init_img_tex(t_env *env, SDL_Surface **img_tex)
+static void				init_img_tex(t_env *env, SDL_Surface **img_tex)
 {
 	img_tex[0] = load_surface(env, "resource/textures/eagle.png");
 	img_tex[1] = load_surface(env, "resource/textures/red_brick.png");
@@ -64,7 +64,7 @@ static void			init_img_tex(t_env *env, SDL_Surface **img_tex)
 	img_tex[7] = load_surface(env, "resource/textures/color_stone.png");
 }
 
-static t_env		*env_def_val(t_env *env)
+static t_env			*env_def_val(t_env *env)
 {
 	if (!env)
 		return (NULL);
@@ -89,7 +89,7 @@ static t_env		*env_def_val(t_env *env)
 	return (env);
 }
 
-t_env				*init_env(void)
+t_env					*init_env(void)
 {
 	t_env	*env;
 

@@ -6,16 +6,13 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 21:45:36 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/01 13:50:24 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/02 15:11:15 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include "libft.h"
 
-void	ft_putstr(char const *s)
+void	ft_putstr(const char *s)
 {
-	if (!s)
-		return ;
-	write(1, s, ft_strlen(s));
+	ft_putstr_fd(s, 1);
 }

@@ -6,11 +6,11 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/12 12:51:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/12 12:54:54 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 14:45:47 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <string.h>
 #include <sys/param.h>
 #include <sys/sysctl.h>
 

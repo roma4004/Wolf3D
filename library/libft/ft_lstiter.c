@@ -16,9 +16,8 @@ void	ft_lstiter(t_list *lst, void (*f)(t_list *elem))
 {
 	t_list *curr_node;
 
-	if (lst == NULL || f == NULL)
+	if (!lst || !f)
 		return ;
-	curr_node = NULL;
 	if (lst)
 	{
 		curr_node = lst;

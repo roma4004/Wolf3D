@@ -1,30 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_free_arr.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/18 22:11:49 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/03 11:41:21 by dromanic         ###   ########.fr       */
+/*   Created: 2017/11/18 20:14:10 by dromanic          #+#    #+#             */
+/*   Updated: 2018/11/03 16:31:07 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "libft.h"
 
-void	ft_lstdelone(t_list **alst, void (*del)(void *, size_t))
+void	ft_free_arr(char **arr)
 {
-	t_list	*head;
-	t_list	*cur_node;
+	int i;
 
-	if (!alst || !del || !(head = *alst))
-		return ;
-	if (head)
+	i = 0;
+	while (arr[i])
 	{
-		cur_node = head->next;
-		del(head, head->content_size);
-		head = cur_node;
+		free(arr[i]);
+		i++;
 	}
-	*alst = NULL;
+	free(&arr);
 }

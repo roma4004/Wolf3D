@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 16:29:00 by dromanic          #+#    #+#             */
-/*   Updated: 2018/09/11 16:33:57 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 14:51:11 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,19 @@
 
 char	*ft_lltoa(long long n)
 {
-	long long	temp;
-	long long	len_n;
-	char		*result;
+	size_t	len;
+	char	*result;
 
 	if (n == -2147483648)
 		return (ft_strdup("-2147483648"));
-	len_n = 1;
-	temp = n;
-	while (temp /= 10)
-		len_n++;
-	result = (char *)malloc(sizeof(char) * (len_n + 1));
-	if (result)
+	len = ft_num_width(n);
+	if ((result = ft_strnew(len)))
 	{
 		if (n == 0)
 			result[0] = '0';
-		if (n < 0 && (result[0] = '-') && len_n++)
+		if (n < 0 && (result[0] = '-'))
 			n = -n;
-		result[len_n] = '\0';
-		while (n > 0 && (result[--len_n] = (n % 10 + '0')))
+		while (n > 0 && (result[--len] = (char)('0' + n % 10)))
 			n /= 10;
 	}
 	return (result);

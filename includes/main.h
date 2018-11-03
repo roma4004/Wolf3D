@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/24 17:11:28 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 15:34:09 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define TEXTURES 8
 # define DEF_EDGE_TEX 2
 # define SHOW_FPS 1
-# define DEBUG 0
+# define DEBUG 1
 # define MAX_MAP_SIDE 10000
 
 # include <stdbool.h>
@@ -37,7 +37,7 @@
 # include "SDL_image.h"
 # include "SDL_mixer.h"
 # include "SDL_audio.h"
-# include "libft.h"
+# include "../library/libft/libft.h"
 # include "get_next_line.h"
 
 typedef struct	s_uint32_point

@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/08/07 12:17:01 by dromanic          #+#    #+#              #
-#    Updated: 2018/10/24 00:45:44 by dromanic         ###   ########.fr        #
+#    Updated: 2018/11/03 18:37:32 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRC = ft_append_or_new_lst.c \
 	ft_begin_trim.c \
 	ft_bzero.c \
 	ft_destroy_lst.c \
+	ft_digits_len.c \
 	ft_end_trim.c \
 	ft_get_word.c \
 	ft_get_processors_num.c \
@@ -43,6 +44,7 @@ SRC = ft_append_or_new_lst.c \
 	ft_memdel.c \
 	ft_memmove.c \
 	ft_memset.c \
+	ft_num_width.c \
 	ft_pow.c \
 	ft_putchar.c \
 	ft_putchar_fd.c \
@@ -53,7 +55,7 @@ SRC = ft_append_or_new_lst.c \
 	ft_putstr.c \
 	ft_putstr_fd.c \
 	ft_skip_white_spases.c \
-	ft_split_count_str.c \
+	ft_word_len.c \
 	ft_strcat.c \
 	ft_strchr.c \
 	ft_strclr.c \
@@ -84,15 +86,14 @@ SRC = ft_append_or_new_lst.c \
 	ft_strtrim.c \
 	ft_substr_copy.c \
 	ft_tolower.c \
+	ft_free_arr.c \
 	ft_toupper.c
 
 OBJ = $(SRC:.c=.o)
 
-INC_DIR = ./
+INC_DIR = .
 
-COMPFLAGS = -c
-
-BUILDFLAGS = -Wall -Wextra -Werror
+BUILDFLAGS = -Wall -Wextra -Werror -std=c99
 
 LIBFLAGS = -I$(INC_DIR)
 
@@ -101,7 +102,7 @@ NORMFLAGS = -R CheckForbiddenSourceHeader
 all: $(NAME)
 
 $(NAME):
-	@gcc $(COMPFLAGS) $(SRC) -I./
+	@gcc -c $(BUILDFLAGS) $(SRC) -I$(INC_DIR)
 	@ar rc $(NAME) $(OBJ)
 	@ranlib $(NAME)
 
@@ -121,13 +122,13 @@ build:
 	@gcc $(BUILDFLAGS) -o $(NAME) $(SRC) -I$(INC_DIR)
 
 buildall:
-	@gcc $(BUILDFLAGS) -o $(NAME) *.c -I./*.h
+	@gcc $(BUILDFLAGS) -o $(NAME) *.c -I$(INC_DIR)
 
 buildlib:
-	@gcc $(BUILDFLAGS) -o $(NAME) $(SRC) -L. -lft $(LIBFLAGS) -I./
+	@gcc $(BUILDFLAGS) -o $(NAME) $(SRC) -L. -lft $(LIBFLAGS) -I$(INC_DIR)
 
 complib:
-	@gcc $(COMPFLAGS) $(SRC) -I./
+	@gcc $(COMPFLAGS) $(SRC) -I$(INC_DIR)
 
 makelib:
 	@ar rc $(NAME) $(OBJ)

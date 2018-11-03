@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 20:51:09 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/26 19:43:29 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 12:37:10 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,18 @@ char	*ft_strsub(char const *s, unsigned int start, size_t len)
 	size_t	i;
 	char	*alloc;
 
-	alloc = NULL;
-	if (s)
+	if (!s)
+		return (NULL);
+	if ((alloc = (char *)malloc(sizeof(char) * (len + 1))))
 	{
-		alloc = (char *)malloc(sizeof(char) * (len + sizeof(char)));
-		if (alloc)
+		i = 0;
+		while (len--)
 		{
-			i = 0;
-			while (len--)
-			{
-				alloc[i] = s[start + i];
-				i++;
-			}
-			alloc[i] = '\0';
+			alloc[i] = s[start + i];
+			i++;
 		}
+		alloc[i] = '\0';
+		return (alloc);
 	}
-	return (alloc);
+	return (NULL);
 }

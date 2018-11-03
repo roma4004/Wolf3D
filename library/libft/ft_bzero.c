@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 22:24:31 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/25 19:47:07 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/01 19:02:12 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,5 @@
 
 void	ft_bzero(void *s, size_t n)
 {
-	size_t	i;
-	char	*ch_s_ptr;
-
-	ch_s_ptr = (char *)s;
-	i = 0;
-	while (i < n)
-	{
-		ch_s_ptr[i] = '\0';
-		i++;
-	}
+	ft_memset(s, 0, n);
 }

@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include <stdlib.h>
+#include "libft.h"
 
 int		ft_append_or_new_lst(t_list **lst, char *buf, size_t size)
 {

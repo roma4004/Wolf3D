@@ -10,17 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include <stdlib.h>
+#include "libft.h"
 
 void	ft_lstdel(t_list **alst, void (*del)(void *, size_t))
 {
 	t_list	*head;
 	t_list	*cur_node;
 
-	if (alst == NULL || del == NULL)
+	if (!alst || !del || !(head = *alst))
 		return ;
-	head = *alst;
 	while (head)
 	{
 		cur_node = head->next;

@@ -6,25 +6,23 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 21:16:25 by dromanic          #+#    #+#             */
-/*   Updated: 2017/11/29 16:10:33 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 11:53:02 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <string.h>
+
 int		ft_strequ(char const *s1, char const *s2)
 {
-	int i;
+	size_t	i;
 
-	if (s1 && s2)
-	{
-		i = 0;
-		while (s1[i] && s2[i])
-		{
-			if (s1[i] != s2[i])
-				return (0);
-			i++;
-		}
+	if (!s1 || !s2)
+		return (1);
+	i = -1;
+	while (s1[++i] && s2[i])
 		if (s1[i] != s2[i])
 			return (0);
-	}
+	if (s1[i] != s2[i])
+		return (0);
 	return (1);
 }
