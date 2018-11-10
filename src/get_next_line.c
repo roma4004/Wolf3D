@@ -6,115 +6,163 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 17:59:40 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/15 16:33:49 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/10 19:39:35 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+/*
+** fd_lst->content = buf_lst;
+** fd_lst->content_size = fd;
+** fd_lst->next = fd_lst;
+**
+** buf_lst->content = str;
+** buf_lst->content_size = str_len;
+** buf_lst->next = buf_lst;
+**
+** str_len_max = BUFF_SIZE;
+**
+** fd_lst
+**    |->buf_lst->buf_lst->...->buf_lst->NULL
+**    |->buf_lst->buf_lst->...->buf_lst->NULL
+**    |->buf_lst->buf_lst->...->buf_lst->NULL
+**    |->buf_lst->buf_lst->...->buf_lst->NULL
+**    |->NULL
+*/
 
-static int	ln_len(char *str)
+static void	ft_substr_copy2(char *dst, char *src, size_t *i, char stop_sym)
 {
-	int i;
-	int	len;
+	size_t j;
 
-	if (str == NULL)
+	if (!dst || !src)
+		return;
+	j = 0;
+	while (src[*i] && src[*i] != stop_sym)
+		dst[j++] = src[(*i)++];
+}
+
+static size_t	line_len(char *str)
+{
+	size_t	len;
+
+	if (!str)
 		return (0);
-	i = 0;
 	len = 0;
-	while (str[i] != '\n' && str[i] != '\0' && str[i++] != '\3')
+	while (*str != '\n' && *str != '\0' && ++str)
 		len++;
 	return (len);
 }
 
-static int	data_mod(char **data, int fd, char *buf, unsigned int line_len)
+static int	data_mod(t_list **lst, size_t fd, char *buf, size_t line_len)
 {
-	char	*temp;
+	t_list	*cur;
 
-	temp = NULL;
-	if (data == NULL || buf == NULL || line_len == 0)
+	if (!buf || line_len < 1)
 		return (0);
-	if (data[fd] == NULL)
+	if (!(cur = *lst))
 	{
-		if ((data[fd] = ft_strnew(line_len)))
-			ft_strncpy(data[fd], buf, line_len);
+		ft_append_or_new_lst(lst, buf, ft_strlen(buf));
+		(*lst)->content_size = fd;
 	}
 	else
 	{
-		temp = ft_strjoin(data[fd], buf);
-		free(data[fd]);
-		data[fd] = NULL;
-		data[fd] = temp;
-	}
-	return (1);
-}
-
-static int	del_line(char **data, int fd)
-{
-	unsigned int	i;
-	unsigned int	j;
-	unsigned int	rem_size;
-	char			*nline;
-	int				line_len;
-
-	if (data[fd] == NULL)
-		return (0);
-	nline = NULL;
-	if (ft_strchr(data[fd], '\n'))
-	{
-		line_len = ln_len(data[fd]);
-		rem_size = ft_strlen(data[fd]) - line_len - 1;
-		if (rem_size > 0)
-			nline = ft_strnew(rem_size);
-		if (nline && (i = ln_len(data[fd]) + 1))
+		while (cur)
 		{
-			j = 0;
-			while (data[fd][i])
-				nline[j++] = data[fd][i++];
+			if (cur->content_size == fd)
+				break;
+			cur = cur->next;
 		}
+		if (cur->content)
+			cur->content = ft_strjoin(cur->content, buf);
+		else
+			ft_strdup(buf);//not checked if buffer not full
 	}
-	free(data[fd]);
-	data[fd] = nline;
 	return (1);
 }
 
-static char	**init_data(void)
+static void	del_line(t_list *lst, size_t fd, size_t *offset)
 {
-	int		i;
-	char	**new_data;
+	t_list	*pre;
+	t_list	*cur;
+	char	*str;
 
-	if ((new_data = (char **)malloc(sizeof(char *) * MAX_FD)))
+	if (!(cur = lst) || !(pre = lst))
+		return ;
+	while (cur)
 	{
-		i = 0;
-		while (i < MAX_FD)
-			new_data[i++] = NULL;
+		if (cur->content && cur->content_size == (size_t)fd)
+		{
+			if (!ft_strchr(cur->content, '\n'))
+			{
+				free(cur->content);
+				pre->next = cur->next;
+				free(cur);
+				return ;
+			}
+			else
+			{
+				ft_strlcat(cur->content, cur->content + *offset + 1,
+							ft_strlen(cur->content) - *offset);
+				return ;
+			}
+		}
+		pre = cur;
+		cur = cur->next;
 	}
-	return (new_data);
+}
+
+static char	*pop_line(t_list *lst, char **line, const int fd)
+{
+	t_list	*cur;
+	size_t	offset;
+
+	cur = lst;
+	while (cur)
+	{
+		if (cur->content_size == (size_t)fd)
+		{
+			if((*line = ft_strnew(line_len(cur->content))))
+			{
+				ft_substr_copy2(*line, cur->content, &offset, '\n');
+				del_line(cur, fd, &offset);
+				break ;
+			}
+		}
+		cur = cur->next;
+	}
+	return (*line);
 }
 
 int			get_next_line(const int fd, char **line)
 {
-	static char		**data = NULL;
-	int				len;
-	char			*buf;
+	static t_list	*lst = NULL;
+	t_list			*cur;
+	ssize_t			len;
+	char			buf[BUFF_SIZE + 1];//need move to stack
 
-	if (fd < 0 || fd > MAX_FD)
+	if (fd < 0 || BUFF_SIZE < 1 || fd > MAX_FD || (buf[BUFF_SIZE] = '\0'))
 		return (-1);
-	if (data == NULL)
-		data = init_data();
-	buf = ft_strnew(BUFF_SIZE);
-	while ((len = read(fd, buf, BUFF_SIZE)) > 0 && data_mod(data, fd, buf, len))
+	*line = NULL;
+	cur = lst;
+	while (cur && cur->content)
 	{
-		if (ft_strchr(buf, '\n'))
-			break ;
-		ft_bzero(buf, BUFF_SIZE);
+		if (cur->content_size == (size_t)fd
+		&& cur->content && ft_strchr(cur->content, '\n'))
+		{
+			pop_line(lst, line, fd);
+			return (1);
+		}
+		cur = cur->next;
 	}
-	free(buf);
+	while ((len = read(fd, buf, BUFF_SIZE)) > 0
+	&& data_mod(&lst, (size_t)fd, buf, (size_t)len) && !ft_strchr(buf, '\n'))
+		ft_bzero(buf, BUFF_SIZE);
 	if (len == -1)
 		return (-1);
-	if (data[fd] == NULL)
+	if (lst == NULL)
 		return (0);
-	*line = ft_strnew(ln_len(data[fd]));
-	if ((*line) && (ft_strncpy(*line, data[fd], ln_len(data[fd]))))
-		return (del_line(data, fd));
+	pop_line(lst, line, fd);
+	if (*line)
+		return (1);
 	return (0);
 }

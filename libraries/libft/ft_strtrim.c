@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 20:23:24 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/03 12:44:24 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/07 19:24:14 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 
 char	*ft_strtrim(char const *s)
 {
-	long long int	i;
-	long long int	len;
-	char			*alloc;
+	ssize_t		i;
+	ssize_t		len;
+	char		*alloc;
 
-	if (s == NULL)
+	if (!s)
 		return (NULL);
-	len = ft_strlen(s);
+	len = (ssize_t)(ft_strlen(s));
 	while (s[len - 1] == ' ' || s[len - 1] == '\t' || s[len - 1] == '\n')
 		len--;
 	i = -1;
@@ -29,12 +29,11 @@ char	*ft_strtrim(char const *s)
 		len--;
 	if (len <= 0)
 		len = 0;
-	if (!(alloc = (char *)malloc(sizeof(char) * (len + 1))))
+	if (!(alloc = ft_strnew((size_t)len)))
 		return (NULL);
 	s += i;
 	i = -1;
 	while (++i < len)
 		alloc[i] = *s++;
-	alloc[i] = '\0';
 	return (alloc);
 }

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/03 15:34:09 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/07 15:20:05 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,19 @@
 # include "SDL_image.h"
 # include "SDL_mixer.h"
 # include "SDL_audio.h"
-# include "../library/libft/libft.h"
+# include "libft.h"
 # include "get_next_line.h"
+
+
+/*todo:	red dot aim
+	visual editor
+	inventory [i]
+	pause [p]
+	quick belt (fast access)
+	menu and splash screen
+
+*/
+
 
 typedef struct	s_uint32_point
 {
@@ -52,7 +63,7 @@ typedef struct	s_sint32_point
 	Sint32		y;
 }				t_sint32_pt;
 
-typedef struct	s_double_pt
+typedef struct	s_double_point
 {
 	double		x;
 	double		y;

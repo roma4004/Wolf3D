@@ -6,50 +6,82 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/11/03 15:58:34 by dromanic         ###   ########.fr        #
+#    Updated: 2018/11/10 14:24:35 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = wolf3d
 
-GC = gcc   -O3 -Ipthreads -Wall -Wextra -Werror
+СC = gcc   -O3 -Ipthreads -Wall -Wextra -Werror
 CM = cmake -O3 -Ipthreads -Wall -Wextra -Werror
 CL = clang -O3 -Ipthreads -Wall -Wextra -Werror
 
-[[ $1 = "clang" ]] && CC=CL || CC=GC
-[[ $1 = "cmake" ]] && CC=CM || CC=GC
+[[ $1 = "clang" ]] && CC=CL
+[[ $1 = "cmake" ]] && CC=CM
 
 NORMFLAGS = -R CheckForbiddenSourceHeader
 
 PROJ_LIB_PATH = library
 PROJ_SRC_PATH = src
 PROJ_INC_PATH = includes
-SDL2_INC_PATH = include/SDL2
-SDL2_LIB_PATH = lib
-
-SDL_VER = 2.0.8
-TTF_VER = 2.0.14
-IMG_VER = 2.0.3
-MIX_VER = 2.0.2_3
+SDL2_INC_PATH = Headers
 
 LFT_LIB_NAME = libft
-SDL_LIB_NAME = sdl2
-TTF_LIB_NAME = sdl2_ttf
-IMG_LIB_NAME = sdl2_image
-MIX_LIB_NAME = sdl2_mixer
+SDL_LIB_NAME = SDL2.framework
+TTF_LIB_NAME = SDL2_ttf.framework
+IMG_LIB_NAME = SDL2_image.framework
+MIX_LIB_NAME = SDL2_mixer.framework
+
+SDL_FW = -framework $(SDL_LIB_NAME)
+TTF_FW = -framework $(TTF_LIB_NAME)
+IMG_FW = -framework $(IMG_LIB_NAME)
+MIX_FW = -framework $(MIX_LIB_NAME)
 
 LFT_PATH = $(PROJ_LIB_PATH)/$(LFT_LIB_NAME)
-SDL_PATH = $(PROJ_LIB_PATH)/$(SDL_LIB_NAME)/$(SDL_VER)
-TTF_PATH = $(PROJ_LIB_PATH)/$(TTF_LIB_NAME)/$(TTF_VER)
-IMG_PATH = $(PROJ_LIB_PATH)/$(IMG_LIB_NAME)/$(IMG_VER)
-MIX_PATH = $(PROJ_LIB_PATH)/$(MIX_LIB_NAME)/$(MIX_VER)
+SDL_PATH = $(PROJ_LIB_PATH)/$(SDL_LIB_NAME)
+TTF_PATH = $(PROJ_LIB_PATH)/$(TTF_LIB_NAME)
+IMG_PATH = $(PROJ_LIB_PATH)/$(IMG_LIB_NAME)
+MIX_PATH = $(PROJ_LIB_PATH)/$(MIX_LIB_NAME)
 
 PRJ_INC = -I $(PROJ_INC_PATH)
-LFT_INC = -I $(LFT_PATH)/includes
+LFT_INC = -I $(LFT_PATH)
 SDL_INC = -I $(SDL_PATH)/$(SDL2_INC_PATH)
 TTF_INC = -I $(TTF_PATH)/$(SDL2_INC_PATH)
 IMG_INC = -I $(IMG_PATH)/$(SDL2_INC_PATH)
 MIX_INC = -I $(MIX_PATH)/$(SDL2_INC_PATH)
+
+#start sdl2 section (with brew installed library)
+#PROJ_LIB_PATH = library
+#PROJ_SRC_PATH = src
+#PROJ_INC_PATH = includes
+#SDL2_INC_PATH = include/SDL2
+#SDL2_LIB_PATH = lib
+#
+#SDL_VER = 2.0.8
+#TTF_VER = 2.0.14
+#IMG_VER = 2.0.3
+#MIX_VER = 2.0.2_3
+#
+#LFT_LIB_NAME = libft
+#SDL_LIB_NAME = sdl2
+#TTF_LIB_NAME = sdl2_ttf
+#IMG_LIB_NAME = sdl2_image
+#MIX_LIB_NAME = sdl2_mixer
+#
+#LFT_PATH = $(PROJ_LIB_PATH)/$(LFT_LIB_NAME)
+#SDL_PATH = $(PROJ_LIB_PATH)/$(SDL_LIB_NAME)/$(SDL_VER)
+#TTF_PATH = $(PROJ_LIB_PATH)/$(TTF_LIB_NAME)/$(TTF_VER)
+#IMG_PATH = $(PROJ_LIB_PATH)/$(IMG_LIB_NAME)/$(IMG_VER)
+#MIX_PATH = $(PROJ_LIB_PATH)/$(MIX_LIB_NAME)/$(MIX_VER)
+#
+#PRJ_INC = -I $(PROJ_INC_PATH)
+#LFT_INC = -I $(LFT_PATH)/
+#SDL_INC = -I $(SDL_PATH)/$(SDL2_INC_PATH)
+#TTF_INC = -I $(TTF_PATH)/$(SDL2_INC_PATH)
+#IMG_INC = -I $(IMG_PATH)/$(SDL2_INC_PATH)
+#MIX_INC = -I $(MIX_PATH)/$(SDL2_INC_PATH)
+#
+#end sdl2 section (with brew installed library)
 
 LFT_LNK = -L $(LFT_PATH)
 SDL_LNK = -L $(SDL_PATH)/$(SDL2_LIB_PATH)
@@ -66,6 +98,7 @@ MIX_LIB = -l SDL2_mixer
 ALL_INC = $(SDL_INC) $(TTF_INC) $(IMG_INC) $(MIX_INC) $(LFT_INC) $(PRJ_INC)
 ALL_LNK = $(SDL_LNK) $(TTF_LNK) $(IMG_LNK) $(MIX_LNK) $(LFT_LNK)
 ALL_LIB = $(SDL_LIB) $(TTF_LIB) $(IMG_LIB) $(MIX_LIB) $(LFT_LIB)
+ALL_FW  = $(SDL_FW)  $(TTF_FW)  $(IMG_FW)  $(MIX_FW)
 
 SRC_NAMES = color.c \
 			draw.c \
@@ -112,22 +145,16 @@ libfclean:
 libre:
 	@make -C $(LFT_PATH) re
 
-normall:
-	norminette $(NORMFLAGS) $(LFT_PATH)/*.c
-	norminette $(NORMFLAGS) $(LFT_PATH)/*.h
-	norminette $(NORMFLAGS) $(PROJ_SRC_PATH)/*.c
-	norminette $(NORMFLAGS) $(PROJ_INC_PATH)/*.h
+norm:
+	norminette $(LFT_PATH)/*.c
+	norminette $(LFT_PATH)/*.h
+	norminette $(PROJ_SRC_PATH)/*.c
+	norminette $(PROJ_INC_PATH)/*.h
 
-normsall:
+normf:
 	@norminette $(NORMFLAGS) $(LFT_PATH)/*.c  | grep -E '^(Error|Warning)'
 	@norminette $(NORMFLAGS) $(LFT_PATH)/*.h  | grep -E '^(Error|Warning)'
 	@norminette $(NORMFLAGS) $(PROJ_SRC_PATH)/*.c  | grep -E '^(Error|Warning)'
 	@norminette $(NORMFLAGS) $(PROJ_INC_PATH)/*.h  | grep -E '^(Error|Warning)'
-
-normf:
-	@norminette $(NORMFLAGS) # | grep -E '^(Error|Warning)'
-
-norm:
-	@norminette # | grep -E '^(Error|Warning)'
 
 .phony: all clean fclean re

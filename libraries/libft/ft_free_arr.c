@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strequ.c                                        :+:      :+:    :+:   */
+/*   ft_free_arr.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/18 21:16:25 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/03 11:53:02 by dromanic         ###   ########.fr       */
+/*   Created: 2017/11/18 20:14:10 by dromanic          #+#    #+#             */
+/*   Updated: 2018/11/03 16:31:07 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string.h>
+#include <stdlib.h>
 
-int		ft_strequ(char const *s1, char const *s2)
+void	ft_free_arr(char **arr)
 {
 	size_t	i;
 
-	if (!s1 || !s2)
-		return (1);
-	i = -1;
-	while (s1[++i] && s2[i])
-		if (s1[i] != s2[i])
-			return (0);
-	if (s1[i] != s2[i])
-		return (0);
-	return (1);
+	if (!arr || !*arr)
+		return ;
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(&arr);
 }

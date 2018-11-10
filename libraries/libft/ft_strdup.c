@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_list.h.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/03 15:37:16 by dromanic         ###   ########.fr       */
+/*   Created: 2017/11/18 21:23:51 by dromanic          #+#    #+#             */
+/*   Updated: 2018/11/08 14:00:18 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_LIST_H
-# define FT_LIST_H
+#include <stdlib.h>
+#include "libft.h"
 
-typedef struct	s_list
+char	*ft_strdup(const char *s1)
 {
-	void			*content;
-	size_t			content_size;
-	struct s_list	*next;
-}				t_list;
+	size_t	len;
+	size_t	i;
+	char	*new_str;
 
-#endif
+	len = ft_strlen(s1);
+	if (!(new_str = ft_strnew(len)))
+		return (NULL);
+	i = -1;
+	while (++i < len)
+		new_str[i] = s1[i];
+	return (new_str);
+}

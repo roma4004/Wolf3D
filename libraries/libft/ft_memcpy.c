@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free_arr.c                                      :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/18 20:14:10 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/03 16:31:07 by dromanic         ###   ########.fr       */
+/*   Created: 2017/11/18 21:58:00 by dromanic          #+#    #+#             */
+/*   Updated: 2018/11/03 17:47:14 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
+#include <string.h>
 
-void	ft_free_arr(char **arr)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	int i;
+	size_t			i;
+	unsigned char	*ch_src;
+	unsigned char	*ch_dst;
 
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(&arr);
+	ch_src = (unsigned char *)src;
+	ch_dst = (unsigned char *)dest;
+	i = -1;
+	while (++i < n)
+		ch_dst[i] = ch_src[i];
+	return (dest);
 }
