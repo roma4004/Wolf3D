@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/07 15:20:05 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/14 20:39:16 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # define WIN_HEIGHT 1080
 # define WIN_NAME "wolf3d by dromanic (@Dentair)"
 # define DEFAULT_MENU_COLOR 0x0f9100FF
-# define DEF_FONT "resource/fonts/ARIAL.TTF"
+# define DEF_FONT "resources/fonts/ARIAL.TTF"
 # define DEF_FONT_SIZE 24
 # define FRAME_LIMIT 60
 # define TEX_WIDTH 64
@@ -24,7 +24,7 @@
 # define TEXTURES 8
 # define DEF_EDGE_TEX 2
 # define SHOW_FPS 1
-# define DEBUG 1
+# define DEBUG 0
 # define MAX_MAP_SIDE 10000
 
 # include <stdbool.h>
@@ -38,7 +38,7 @@
 # include "SDL_mixer.h"
 # include "SDL_audio.h"
 # include "libft.h"
-# include "get_next_line.h"
+# include "get_next_line2.h"
 
 
 /*todo:	red dot aim

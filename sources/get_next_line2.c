@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line2.h"
 /*
 ** fd_lst->content = buf_lst;
 ** fd_lst->content_size = fd;
@@ -90,28 +90,24 @@ static void	del_line(t_list *lst, size_t fd, size_t *offset)
 		return ;
 	while (cur)
 	{
-		if (cur->content && cur->content_size == (size_t)fd)
+		if ((str = cur->content) && cur->content_size == (size_t)fd)
 		{
-			if (!ft_strchr(cur->content, '\n'))
+			if (!ft_strchr(str, '\n'))
 			{
-				free(cur->content);
+				free(str);
 				pre->next = cur->next;
 				free(cur);
-				return ;
 			}
 			else
-			{
-				ft_strlcat(cur->content, cur->content + *offset + 1,
-							ft_strlen(cur->content) - *offset);
-				return ;
-			}
+				ft_strlcat(str, str + *offset + 1, ft_strlen(str) - *offset);
+			return ;
 		}
 		pre = cur;
 		cur = cur->next;
 	}
 }
 
-static char	*pop_line(t_list *lst, char **line, const int fd)
+static int	pop_line(t_list *lst, char **line, const int fd)
 {
 	t_list	*cur;
 	size_t	offset;
@@ -125,12 +121,12 @@ static char	*pop_line(t_list *lst, char **line, const int fd)
 			{
 				ft_substr_copy2(*line, cur->content, &offset, '\n');
 				del_line(cur, fd, &offset);
-				break ;
+				return (1);
 			}
 		}
 		cur = cur->next;
 	}
-	return (*line);
+	return (0);
 }
 
 int			get_next_line(const int fd, char **line)
@@ -148,10 +144,7 @@ int			get_next_line(const int fd, char **line)
 	{
 		if (cur->content_size == (size_t)fd
 		&& cur->content && ft_strchr(cur->content, '\n'))
-		{
-			pop_line(lst, line, fd);
-			return (1);
-		}
+			return (pop_line(lst, line, fd));
 		cur = cur->next;
 	}
 	while ((len = read(fd, buf, BUFF_SIZE)) > 0
@@ -159,10 +152,5 @@ int			get_next_line(const int fd, char **line)
 		ft_bzero(buf, BUFF_SIZE);
 	if (len == -1)
 		return (-1);
-	if (lst == NULL)
-		return (0);
-	pop_line(lst, line, fd);
-	if (*line)
-		return (1);
-	return (0);
+	return (pop_line(lst, line, fd));
 }

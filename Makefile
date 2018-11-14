@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/11/10 14:24:35 by dromanic         ###   ########.fr        #
+#    Updated: 2018/11/14 21:30:45 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,67 +20,69 @@ CL = clang -O3 -Ipthreads -Wall -Wextra -Werror
 [[ $1 = "cmake" ]] && CC=CM
 
 NORMFLAGS = -R CheckForbiddenSourceHeader
-
-PROJ_LIB_PATH = library
-PROJ_SRC_PATH = src
+PROJ_LIB_PATH = libraries
+PROJ_SRC_PATH = sources
 PROJ_INC_PATH = includes
+PROJ_OBJ_PATH = objectives
 SDL2_INC_PATH = Headers
 
-LFT_LIB_NAME = libft
-SDL_LIB_NAME = SDL2.framework
-TTF_LIB_NAME = SDL2_ttf.framework
-IMG_LIB_NAME = SDL2_image.framework
-MIX_LIB_NAME = SDL2_mixer.framework
+#start sdl2.frameworks section
 
-SDL_FW = -framework $(SDL_LIB_NAME)
-TTF_FW = -framework $(TTF_LIB_NAME)
-IMG_FW = -framework $(IMG_LIB_NAME)
-MIX_FW = -framework $(MIX_LIB_NAME)
+#LFT_LIB_NAME = libft
+#SDL_LIB_NAME = SDL2.framework
+#TTF_LIB_NAME = SDL2_ttf.framework
+#IMG_LIB_NAME = SDL2_image.framework
+#MIX_LIB_NAME = SDL2_mixer.framework
+#
+#SDL_FW = -framework $(SDL_LIB_NAME)
+#TTF_FW = -framework $(TTF_LIB_NAME)
+#IMG_FW = -framework $(IMG_LIB_NAME)
+#MIX_FW = -framework $(MIX_LIB_NAME)
+#
+#LFT_PATH = $(PROJ_LIB_PATH)/$(LFT_LIB_NAME)
+#SDL_PATH = $(PROJ_LIB_PATH)/$(SDL_LIB_NAME)
+#TTF_PATH = $(PROJ_LIB_PATH)/$(TTF_LIB_NAME)
+#IMG_PATH = $(PROJ_LIB_PATH)/$(IMG_LIB_NAME)
+#MIX_PATH = $(PROJ_LIB_PATH)/$(MIX_LIB_NAME)
+#
+#PRJ_INC = -I $(PROJ_INC_PATH)
+#LFT_INC = -I $(LFT_PATH)
+#SDL_INC = -I $(SDL_PATH)/$(SDL2_INC_PATH)
+#TTF_INC = -I $(TTF_PATH)/$(SDL2_INC_PATH)
+#IMG_INC = -I $(IMG_PATH)/$(SDL2_INC_PATH)
+#MIX_INC = -I $(MIX_PATH)/$(SDL2_INC_PATH)
+
+#end sdl2.frameworks section
+
+#start sdl2 section (with brew installed library)
+
+SDL2_INC_PATH = include/SDL2
+SDL2_LIB_PATH = lib
+
+SDL_VER = 2.0.8
+TTF_VER = 2.0.14
+IMG_VER = 2.0.3
+MIX_VER = 2.0.2_3
+
+LFT_LIB_NAME = libft
+SDL_LIB_NAME = sdl2
+TTF_LIB_NAME = sdl2_ttf
+IMG_LIB_NAME = sdl2_image
+MIX_LIB_NAME = sdl2_mixer
 
 LFT_PATH = $(PROJ_LIB_PATH)/$(LFT_LIB_NAME)
-SDL_PATH = $(PROJ_LIB_PATH)/$(SDL_LIB_NAME)
-TTF_PATH = $(PROJ_LIB_PATH)/$(TTF_LIB_NAME)
-IMG_PATH = $(PROJ_LIB_PATH)/$(IMG_LIB_NAME)
-MIX_PATH = $(PROJ_LIB_PATH)/$(MIX_LIB_NAME)
+SDL_PATH = $(PROJ_LIB_PATH)/$(SDL_LIB_NAME)/$(SDL_VER)
+TTF_PATH = $(PROJ_LIB_PATH)/$(TTF_LIB_NAME)/$(TTF_VER)
+IMG_PATH = $(PROJ_LIB_PATH)/$(IMG_LIB_NAME)/$(IMG_VER)
+MIX_PATH = $(PROJ_LIB_PATH)/$(MIX_LIB_NAME)/$(MIX_VER)
 
 PRJ_INC = -I $(PROJ_INC_PATH)
-LFT_INC = -I $(LFT_PATH)
+LFT_INC = -I $(LFT_PATH)/
 SDL_INC = -I $(SDL_PATH)/$(SDL2_INC_PATH)
 TTF_INC = -I $(TTF_PATH)/$(SDL2_INC_PATH)
 IMG_INC = -I $(IMG_PATH)/$(SDL2_INC_PATH)
 MIX_INC = -I $(MIX_PATH)/$(SDL2_INC_PATH)
 
-#start sdl2 section (with brew installed library)
-#PROJ_LIB_PATH = library
-#PROJ_SRC_PATH = src
-#PROJ_INC_PATH = includes
-#SDL2_INC_PATH = include/SDL2
-#SDL2_LIB_PATH = lib
-#
-#SDL_VER = 2.0.8
-#TTF_VER = 2.0.14
-#IMG_VER = 2.0.3
-#MIX_VER = 2.0.2_3
-#
-#LFT_LIB_NAME = libft
-#SDL_LIB_NAME = sdl2
-#TTF_LIB_NAME = sdl2_ttf
-#IMG_LIB_NAME = sdl2_image
-#MIX_LIB_NAME = sdl2_mixer
-#
-#LFT_PATH = $(PROJ_LIB_PATH)/$(LFT_LIB_NAME)
-#SDL_PATH = $(PROJ_LIB_PATH)/$(SDL_LIB_NAME)/$(SDL_VER)
-#TTF_PATH = $(PROJ_LIB_PATH)/$(TTF_LIB_NAME)/$(TTF_VER)
-#IMG_PATH = $(PROJ_LIB_PATH)/$(IMG_LIB_NAME)/$(IMG_VER)
-#MIX_PATH = $(PROJ_LIB_PATH)/$(MIX_LIB_NAME)/$(MIX_VER)
-#
-#PRJ_INC = -I $(PROJ_INC_PATH)
-#LFT_INC = -I $(LFT_PATH)/
-#SDL_INC = -I $(SDL_PATH)/$(SDL2_INC_PATH)
-#TTF_INC = -I $(TTF_PATH)/$(SDL2_INC_PATH)
-#IMG_INC = -I $(IMG_PATH)/$(SDL2_INC_PATH)
-#MIX_INC = -I $(MIX_PATH)/$(SDL2_INC_PATH)
-#
 #end sdl2 section (with brew installed library)
 
 LFT_LNK = -L $(LFT_PATH)
@@ -111,18 +113,21 @@ SRC_NAMES = color.c \
 
 SRC = $(addprefix $(PROJ_SRC_PATH)/, $(SRC_NAMES))
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(addprefix ./$(PROJ_OBJ_PATH)/, $(SRC_NAMES:.c=.o))
 
 all: $(NAME)
 
-%.o : %.c
+./$(PROJ_OBJ_PATH)/%.o: ./$(PROJ_SRC_PATH)/%.c
 	$(CC) $(ALL_INC) -c $< -o $@
 
-$(NAME): liball $(OBJ)
+$(NAME): makesrcdir liball $(OBJ)
 	$(CC) $(ALL_INC) $(ALL_LNK) $(ALL_LIB) $(OBJ) -o $(NAME)
 
+makesrcdir:
+	mkdir -p $(PROJ_OBJ_PATH)
+
 clean: libclean
-	rm -f $(OBJ)
+	rm -rf $(PROJ_OBJ_PATH)
 
 fclean: clean libfclean
 	rm -f $(NAME)
