@@ -15,4 +15,4 @@
 
 ![img](https://github.com/roma4004/Wolf3D/blob/master/screenshot/very_long_room1.png)
 
-![img](https://github.com/roma4004/Wolf3D/blob/master/screenshot/very_long_room1.png)
+![img](https://github.com/roma4004/Wolf3D/blob/master/screenshot/very_long_room2.png)
