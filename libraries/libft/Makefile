@@ -12,24 +12,16 @@
 
 NAME = libft.a
 
-INC_DIR = ./
-
-BUILDFLAGS = -Wall -Wextra -Werror -std=c99
-
-NORMFLAGS = -R CheckForbiddenSourceHeader
-
 SRC = ft_append_or_new_lst.c \
 	ft_atoi.c \
 	ft_atol_base.c \
 	ft_begin_trim.c \
 	ft_bzero.c \
-	ft_count_words.c \
 	ft_destroy_lst.c \
 	ft_digits_len.c \
 	ft_end_trim.c \
-	ft_free_arr.c \
-	ft_get_processors_num.c \
 	ft_get_word.c \
+	ft_get_processors_num.c \
 	ft_i_atoi.c \
 	ft_isalnum.c \
 	ft_isalpha.c \
@@ -63,6 +55,7 @@ SRC = ft_append_or_new_lst.c \
 	ft_putstr.c \
 	ft_putstr_fd.c \
 	ft_skip_white_spases.c \
+	ft_word_len.c \
 	ft_strcat.c \
 	ft_strchr.c \
 	ft_strclr.c \
@@ -77,6 +70,7 @@ SRC = ft_append_or_new_lst.c \
 	ft_strjoin.c \
 	ft_strlcat.c \
 	ft_strlen.c \
+	ft_count_words.c \
 	ft_strmap.c \
 	ft_strmapi.c \
 	ft_strncat.c \
@@ -92,10 +86,18 @@ SRC = ft_append_or_new_lst.c \
 	ft_strtrim.c \
 	ft_substr_copy.c \
 	ft_tolower.c \
-	ft_toupper.c \
-	ft_word_len.c
+	ft_free_arr.c \
+	ft_toupper.c
 
 OBJ = $(SRC:.c=.o)
+
+INC_DIR = .
+
+BUILDFLAGS = -Wall -Wextra -Werror -std=c99
+
+LIBFLAGS = -I$(INC_DIR)
+
+NORMFLAGS = -R CheckForbiddenSourceHeader
 
 all: $(NAME)
 
@@ -111,11 +113,25 @@ fclean: clean
 	@/bin/rm -f ./$(NAME)
 
 normf:
-	@norminette $(NORMFLAGS)
+	@norminette $(NORMFLAGS) # | grep -E '^(Error|Warning)'
 
 norm:
-	@norminette
+	@norminette # | grep -E '^(Error|Warning)'
+
+build:
+	@gcc $(BUILDFLAGS) -o $(NAME) $(SRC) -I$(INC_DIR)
+
+buildall:
+	@gcc $(BUILDFLAGS) -o $(NAME) *.c -I$(INC_DIR)
+
+buildlib:
+	@gcc $(BUILDFLAGS) -o $(NAME) $(SRC) -L. -lft $(LIBFLAGS) -I$(INC_DIR)
+
+complib:
+	@gcc $(COMPFLAGS) $(SRC) -I$(INC_DIR)
+
+makelib:
+	@ar rc $(NAME) $(OBJ)
+	@ranlib $(NAME)
 
 re: fclean all
-
-.phony: all clean fclean re

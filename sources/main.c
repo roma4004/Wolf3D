@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
+#include "../includes/main.h"
 
 void			quit_program(t_env *env)
 {
@@ -86,10 +86,11 @@ int				main(int argc, char **argv)
 	t_env *env;
 
 	env = NULL;
+
 	if (argc == 2)
 	{
 		if ((env = init_env()) && parse_map(argv[1], env)
-		&& !Mix_PlayMusic(env->music, 1))
+		/*&& !Mix_PlayMusic(env->music, 1)*/)
 			game_loop(env);
 	}
 	else

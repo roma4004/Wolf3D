@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
+#include "../includes/main.h"
 
 int			render_interface(t_env *env, t_fps *fps, t_txt *txt)
 {

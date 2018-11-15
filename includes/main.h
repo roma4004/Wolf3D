@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/14 20:39:16 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 15:34:09 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define TEXTURES 8
 # define DEF_EDGE_TEX 2
 # define SHOW_FPS 1
-# define DEBUG 0
+# define DEBUG 1
 # define MAX_MAP_SIDE 10000
 
 # include <stdbool.h>
@@ -32,24 +32,16 @@
 # include <math.h>
 # include <errno.h>
 
-# include "SDL.h"
-# include "SDL_ttf.h"
-# include "SDL_image.h"
-# include "SDL_mixer.h"
-# include "SDL_audio.h"
-# include "libft.h"
-# include "get_next_line2.h"
-
-
-/*todo:	red dot aim
-	visual editor
-	inventory [i]
-	pause [p]
-	quick belt (fast access)
-	menu and splash screen
-
-*/
-
+//# include "SDL.h"
+//# include "SDL_ttf.h"
+//# include "SDL_mixer.h"
+//# include "SDL_audio.h"
+# include "SDL/SDL2.framework/Headers/SDL.h"
+# include "SDL/SDL2_ttf.framework/Headers/SDL_ttf.h"
+# include "SDL/SDL2_mixer.framework/Headers/SDL_mixer.h"
+# include "SDL/SDL2_image.framework/Headers/SDL_image.h"
+# include "../libraries/libft/libft.h"
+# include "get_next_line.h"
 
 typedef struct	s_uint32_point
 {
@@ -63,7 +55,7 @@ typedef struct	s_sint32_point
 	Sint32		y;
 }				t_sint32_pt;
 
-typedef struct	s_double_point
+typedef struct	s_double_pt
 {
 	double		x;
 	double		y;
@@ -83,11 +75,11 @@ typedef struct	s_line
 	Uint32			tex_num;
 	Uint32			*img;
 	Uint32			x;
-	Uint32			tex_y;
-	Uint32			start_y;
-	Uint32			end_y;
+	Sint32			tex_y;
+	Sint32			start_y;
+	Sint32			end_y;
 	Uint32			color;
-	Uint32			scale;
+	double			scale;
 	double			height;
 	double			half;
 	double			normal;
@@ -96,6 +88,7 @@ typedef struct	s_line
 	t_double_pt		coords;
 	t_double_pt		start;
 	t_sint32_pt		texture;
+	Sint32			h;
 }				t_line;
 
 typedef struct	s_ray
@@ -136,13 +129,16 @@ typedef struct	s_camera
 	double			x;
 	double			zoom;
 	double			move_speed;
+	double			shift;
 	double			min_wall_dist;
 	double			rotate_speed;
-	t_uint32_pt		center;
+	t_sint32_pt		center;
 	t_sint32_pt		step;
 	t_double_pt		pos;
 	t_double_pt		dir;
 	t_double_pt		plane;
+	Sint32			y_offset;
+	double			z;
 }				t_cam;
 
 typedef struct	s_map
@@ -163,6 +159,8 @@ typedef struct	s_flags
 	bool			is_rotate_left;
 	bool			is_rotate_right;
 	bool			is_compass_texture;
+	bool			is_jetpack_up;
+	bool			is_jetpack_down;
 	unsigned char	mode;
 }				t_flags;
 
@@ -188,6 +186,9 @@ typedef struct	s_environment
 	SDL_Texture		*screen;
 	SDL_Surface		*surface;
 	Mix_Music		*music;
+	Uint32			wall_count;
+	Uint32			ms;
+	double			k_height;
 }				t_env;
 
 enum			e_colors

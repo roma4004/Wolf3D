@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/18 20:25:10 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/08 14:02:47 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/03 17:05:39 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**ft_strsplit(char const *s, char c)
 	char		**res;
 
 	if (!s)
-		return (NULL);
+		return (0);
 	len = ft_count_words(s, ft_strlen(s), c);
 	if (!(res = (char **)malloc(sizeof(char *) * (len + 1))))
 		return (NULL);
@@ -29,9 +29,12 @@ char	**ft_strsplit(char const *s, char c)
 	while (s[i] == c && s[i])
 		i++;
 	j = 0;
-	while (j < len && s[i] && (res[j++] = ft_get_word(s, &i, c)))
+	while (j < len && s[i])
+	{
+		res[j++] = ft_get_word(s, &i, c);
 		while (s[i] == c && s[i])
 			i++;
+	}
 	res[j] = NULL;
 	return (res);
 }

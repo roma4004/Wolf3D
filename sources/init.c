@@ -6,11 +6,11 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/09 18:40:29 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/10/24 17:31:44 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
+#include "../includes/main.h"
 
 static SDL_Surface		*load_surface(t_env *env, char *path_name)
 {
@@ -50,6 +50,9 @@ static void			init_cam(t_cam *cam)
 	cam->center.y = WIN_HEIGHT >> 1;
 	cam->zoom = 1;
 	cam->min_wall_dist = 2.5;
+	cam->shift = 1;
+	cam->y_offset = 0;
+	cam->z = 1;
 }
 
 static void				init_img_tex(t_env *env, SDL_Surface **img_tex)
@@ -71,7 +74,7 @@ static t_env			*env_def_val(t_env *env)
 	env->err_id = 0;
 	ft_bzero(&env->flags, sizeof(t_flags));
 	env->flags.is_compass_texture = 1;
-	env->flags.mode = 2;
+	env->flags.mode = 0;
 	init_cam(&env->cam);
 	ft_bzero(&env->fps, sizeof(t_fps));
 	env->fps.frame_limit_second = 1000 / FRAME_LIMIT;
