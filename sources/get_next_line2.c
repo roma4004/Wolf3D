@@ -11,24 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line2.h"
-/*
-** fd_lst->content = buf_lst;
-** fd_lst->content_size = fd;
-** fd_lst->next = fd_lst;
-**
-** buf_lst->content = str;
-** buf_lst->content_size = str_len;
-** buf_lst->next = buf_lst;
-**
-** str_len_max = BUFF_SIZE;
-**
-** fd_lst
-**    |->buf_lst->buf_lst->...->buf_lst->NULL
-**    |->buf_lst->buf_lst->...->buf_lst->NULL
-**    |->buf_lst->buf_lst->...->buf_lst->NULL
-**    |->buf_lst->buf_lst->...->buf_lst->NULL
-**    |->NULL
-*/
 
 static void	ft_substr_copy2(char *dst, char *src, size_t *i, char stop_sym)
 {

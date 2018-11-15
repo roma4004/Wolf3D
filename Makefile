@@ -120,10 +120,10 @@ all: $(NAME)
 ./$(PROJ_OBJ_PATH)/%.o: ./$(PROJ_SRC_PATH)/%.c
 	$(CC) $(ALL_INC) -c $< -o $@
 
-$(NAME): makesrcdir liball $(OBJ)
+$(NAME): objdir liball $(OBJ)
 	$(CC) $(ALL_INC) $(ALL_LNK) $(ALL_LIB) $(OBJ) -o $(NAME)
 
-makesrcdir:
+objdir:
 	mkdir -p $(PROJ_OBJ_PATH)
 
 clean: libclean
