@@ -51,6 +51,7 @@ static void		mouse_events(SDL_Event *event, t_cam *cam, int *wall_center)
 			*wall_center -= event->motion.yrel;
 		else
 			event->motion.xrel = 0;
+		(void)wall_center;
 	}
 	if (event->type == SDL_MOUSEWHEEL)
 	{
@@ -126,12 +127,18 @@ void			event_handler(t_env *env, t_cam *cam, t_flags *flags)
 	if ((flags->is_rotate_left && (sign = 1))
 	|| (flags->is_rotate_right && (sign = -1)))
 		rotate_x(cam, cam->rotate_speed * sign, cam->dir.x, cam->plane.x);
-	if (flags->is_jetpack_up && cam->z <= 1 + 2 * env->wall_count)
-		cam->z += 0.01;
+	if (flags->is_jetpack_up && cam->z <= 1.9 * env->wall_count)
+	{
+		cam->z += 0.1;
+		cam->y_offset -= 10;
+	}
 	if (flags->is_jetpack_down && cam->z > 1)
-		cam->z -= 0.01;
+		cam->z -= 0.1;
 	if (cam->z > 1 && !flags->is_jetpack_up)
-		cam->z -= 0.01;
+	{
+		cam->y_offset += 30;
+		cam->z -= 0.3;
+	}
 
 	
 	

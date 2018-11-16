@@ -19,19 +19,19 @@ static void		set_texture_pixel(t_env *env, t_ray *ray,
 	int walls;
 	if (flags->is_compass_texture)
 	{
-	// 	line->tex_num = line->side;
+	 	line->tex_num = line->side;
 		if (line->side == 0 && ray->dir.x > 0)
 			line->tex_num = 0;
-	// 	else if (line->side == 0 && ray->dir.x < 0)
-	// 		line->tex_num += 2;
-	// 	else if (line->side == 1 && ray->dir.y > 0)
-	// 		line->tex_num += 3;
-	// 	else if (line->side == 1 && ray->dir.y < 0)
-	// 		line->tex_num += 4;
+	 	else if (line->side == 0 && ray->dir.x < 0)
+	 		line->tex_num += 2;
+	 	else if (line->side == 1 && ray->dir.y > 0)
+	 		line->tex_num += 3;
+	 	else if (line->side == 1 && ray->dir.y < 0)
+	 		line->tex_num += 4;
 	}
-	//if (line->tex_num > TEXTURES - 1)
-	//	line->tex_num %= TEXTURES - 1;
-	line->tex_num = 1;
+	if (line->tex_num > TEXTURES - 1)
+		line->tex_num %= TEXTURES - 1;
+	//line->tex_num = 1;
 	pxs = 0;
 	walls = 0;
 	while (++line->start_y < line->end_y)
@@ -44,7 +44,7 @@ static void		set_texture_pixel(t_env *env, t_ray *ray,
 		line->scale = ((double)(line->h / env->wall_count) / TEX_HEIGHT);
 		//(pxs / line->scale > TEX_HEIGHT) ? psx -= TEX_HEIGHT : pxs;
 		if (pxs / line->scale >= TEX_HEIGHT)
-			pxs = 0;
+			pxs = 1;
 		line->tex_y = pxs / line->scale;
 		line->color = line->img[TEX_HEIGHT * line->tex_y + line->texture.x];
 		//(line->side) ? line->color = (line->color >> 1) & 8355711 : 0;
@@ -62,10 +62,10 @@ static void		painting(t_env *env, t_ray *ray, t_line *line, Uint32 **map)
 		line->tex_num = map[ray->pos.x][ray->pos.y] - 1;
 		ray->wall_x = (line->side == 0) ? env->cam.pos.y + line->normal
 					* ray->dir.y : env->cam.pos.x + line->normal * ray->dir.x;
-		ray->wall_x -= floor(ray->wall_x);
-		line->texture.x = (Uint32)(ray->wall_x * TEX_HEIGHT);
+		ray->wall_x -= (Sint32)ray->wall_x;
+		line->texture.x = (Uint32)(ray->wall_x * (double)TEX_HEIGHT);
 		if ((!line->side && ray->dir.x > 0) || (line->side && ray->dir.y < 0))
-			line->texture.x = TEX_HEIGHT - line->texture.x - 1;
+			line->texture.x = TEX_WIDTH - line->texture.x - 1.0;
 		while (++line->start_y < line->end_y)
 		{
 			//if (line->start_y < WIN_HEIGHT && line->start_y >= 0)
@@ -119,7 +119,7 @@ void		draw_celling_line(t_env *env, t_ray *ray, t_line *line, t_flags *fl)
 	}
 }
 
-void		draw_floor_line(t_env *env, t_ray *ray,
+static void		draw_floor_line(t_env *env, t_ray *ray,
 										t_line *line, t_flags *fl)
 {
 	line->start.x = ray->pos.x + ((!line->side && ray->dir.x < 0) ? 1 : 0);
@@ -168,15 +168,15 @@ static void		draw_wall_line(t_env *env, Uint32 **map,
 	line->normal = (!line->side)
 		? (ray->pos.x - cam->pos.x + ((1 - cam->step.x) >> 1)) / ray->dir.x
 		: (ray->pos.y - cam->pos.y + ((1 - cam->step.y) >> 1)) / ray->dir.y;
-	line->height = (WIN_HEIGHT / line->normal);
+	line->height = (Sint32)(WIN_HEIGHT / line->normal);
 	line->half = ((Sint32)line->height >> 1);
-	line->start_y = (Sint32)(-line->half + cam->center.y + env->cam.y_offset);
-	line->end_y = (Sint32)(line->half + cam->center.y + env->cam.y_offset);
-	line->start_y = line->start_y + (line->end_y * env->cam.z) - line->end_y;
+	line->start_y = -line->half + cam->center.y + env->cam.y_offset;
+	line->end_y = line->half + cam->center.y + env->cam.y_offset;
+	line->start_y += line->end_y * env->cam.z - line->end_y;
 	line->end_y *= env->cam.z;
 	//env->cam.y_offset = ;
 	//line->start_y += line->start_y - (line->start_y * env->cam->z);
-	line->start_y -= line->height * env->wall_count;
+	line->start_y -= line->height * (env->wall_count - 1);
 	line->x = (Uint32)ray->x;
 	line->h = line->end_y - line->start_y;
 	painting(env, ray, line, map);
@@ -205,7 +205,7 @@ void			raycasting(t_env *env, Uint32 **map)
 				? cam->pos.x - ray.pos.x : ray.pos.x + 1 - cam->pos.x);
 		ray.dist.y = ray.step.y * (ray.dir.y < 0
 				? cam->pos.y - ray.pos.y : ray.pos.y + 1 - cam->pos.y);
-		env->wall_count = 3;
+		env->wall_count = 2;
 		draw_wall_line(env, map, &ray, &line);
 		//draw_celling_line(env, &ray, &line, &env->flags);
 		draw_floor_line(env, &ray, &line, &env->flags);
