@@ -6,7 +6,7 @@
 #    By: dromanic <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/24 18:20:17 by dromanic          #+#    #+#              #
-#    Updated: 2018/11/14 21:30:45 by dromanic         ###   ########.fr        #
+#    Updated: 2018/11/24 19:38:30 by dromanic         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,13 +21,14 @@ CL = clang -O3 -Ipthreads -Wall -Wextra -Werror
 
 NORMFLAGS = -R CheckForbiddenSourceHeader
 PROJ_LIB_PATH = libraries
+PROJ_FW_PATH = $(PROJ_LIB_PATH)/Frameworks
 PROJ_SRC_PATH = sources
 PROJ_INC_PATH = includes
 PROJ_OBJ_PATH = objectives
 SDL2_INC_PATH = Headers
 
 #start sdl2.frameworks section
-
+#
 #LFT_LIB_NAME = libft
 #SDL_LIB_NAME = SDL2.framework
 #TTF_LIB_NAME = SDL2_ttf.framework
@@ -38,20 +39,22 @@ SDL2_INC_PATH = Headers
 #TTF_FW = -framework $(TTF_LIB_NAME)
 #IMG_FW = -framework $(IMG_LIB_NAME)
 #MIX_FW = -framework $(MIX_LIB_NAME)
+#ALL_FW = $(SDL_FW) $(TTF_FW) $(IMG_FW) $(MIX_FW)
 #
 #LFT_PATH = $(PROJ_LIB_PATH)/$(LFT_LIB_NAME)
-#SDL_PATH = $(PROJ_LIB_PATH)/$(SDL_LIB_NAME)
-#TTF_PATH = $(PROJ_LIB_PATH)/$(TTF_LIB_NAME)
-#IMG_PATH = $(PROJ_LIB_PATH)/$(IMG_LIB_NAME)
-#MIX_PATH = $(PROJ_LIB_PATH)/$(MIX_LIB_NAME)
+#SDL_PATH = $(PROJ_FW_PATH)/$(SDL_LIB_NAME)
+#TTF_PATH = $(PROJ_FW_PATH)/$(TTF_LIB_NAME)
+#IMG_PATH = $(PROJ_FW_PATH)/$(IMG_LIB_NAME)
+#MIX_PATH = $(PROJ_FW_PATH)/$(MIX_LIB_NAME)
 #
-#PRJ_INC = -I $(PROJ_INC_PATH)
-#LFT_INC = -I $(LFT_PATH)
-#SDL_INC = -I $(SDL_PATH)/$(SDL2_INC_PATH)
-#TTF_INC = -I $(TTF_PATH)/$(SDL2_INC_PATH)
-#IMG_INC = -I $(IMG_PATH)/$(SDL2_INC_PATH)
-#MIX_INC = -I $(MIX_PATH)/$(SDL2_INC_PATH)
-
+#PRJ_INC    = -I $(PROJ_INC_PATH)
+#LFT_FW_INC = -I $(LFT_PATH)
+#SDL_FW_INC = -I $(SDL_PATH)/$(SDL2_INC_PATH)
+#TTF_FW_INC = -I $(TTF_PATH)/$(SDL2_INC_PATH)
+#IMG_FW_INC = -I $(IMG_PATH)/$(SDL2_INC_PATH)
+#MIX_FW_INC = -I $(MIX_PATH)/$(SDL2_INC_PATH)
+#ALL_FW_INC = $(PRJ_FW_INC) $(LFT_FW_INC) $(SDL_FW_INC) $(TTF_FW_INC) $(IMG_FW_INC) $(MIX_FW_INC)
+#
 #end sdl2.frameworks section
 
 #start sdl2 section (with brew installed library)
@@ -97,7 +100,7 @@ TTF_LIB = -l SDL2_ttf
 IMG_LIB = -l SDL2_image
 MIX_LIB = -l SDL2_mixer
 
-ALL_INC = $(SDL_INC) $(TTF_INC) $(IMG_INC) $(MIX_INC) $(LFT_INC) $(PRJ_INC)
+ALL_INC = $(SDL_INC) $(TTF_INC) $(IMG_INC) $(MIX_INC) $(LFT_INC) $(PRJ_INC) $(ALL_FW_INC)
 ALL_LNK = $(SDL_LNK) $(TTF_LNK) $(IMG_LNK) $(MIX_LNK) $(LFT_LNK)
 ALL_LIB = $(SDL_LIB) $(TTF_LIB) $(IMG_LIB) $(MIX_LIB) $(LFT_LIB)
 ALL_FW  = $(SDL_FW)  $(TTF_FW)  $(IMG_FW)  $(MIX_FW)
@@ -121,6 +124,8 @@ all: $(NAME)
 	$(CC) $(ALL_INC) -c $< -o $@
 
 $(NAME): objdir liball $(OBJ)
+	#$(CC) $(ALL_INC) $(ALL_LNK) $(ALL_LIB) $(OBJ) -o $(NAME) \
+	#  -rpath @loader_path/$(PROJ_FW_PATH) -F $(SDL_FW_INC) $(ALL_FW)
 	$(CC) $(ALL_INC) $(ALL_LNK) $(ALL_LIB) $(OBJ) -o $(NAME)
 
 objdir:

@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 15:21:59 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/24 17:37:01 by dromanic         ###   ########.fr       */
+/*   Updated: 2018/11/22 20:24:18 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static Uint32		find_player_map_repair(t_env *env, t_double_pt *cam_pos,
 		while (++x < env->map.width - 1)
 		{
 			if (y && y != env->map.height - 1
-			&& (map[y][x] == 9 || ((!cam_pos->x || !cam_pos->y) && !map[y][x])))
+			&& (map[y][x] == 9 || !((cam_pos->x && cam_pos->y) || map[y][x])))
 			{
 				map[y][x] = 0;
 				cam_pos->x = y + 0.5;
@@ -134,7 +134,7 @@ t_env				*parse_map(char *file_name, t_env *env)
 	&& (env->err_id = READ_ERR)))
 		return (NULL);
 	while (get_next_line(fd, &buf) > 0
-	&& (ft_append_or_new_lst(&lst, buf, ft_strlen(buf))) && (++env->map.height))
+	&& (ft_lstappend(&lst, buf, ft_strlen(buf))) && (++env->map.height))
 	{
 		if (env->map.height > MAX_MAP_SIDE && (env->err_id = MAP_SIZE_ERR))
 			break ;

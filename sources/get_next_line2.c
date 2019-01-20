@@ -38,6 +38,7 @@ static size_t	line_len(char *str)
 static int	data_mod(t_list **lst, size_t fd, char *buf, size_t line_len)
 {
 	t_list	*cur;
+	char	*tmp;
 
 	if (!buf || line_len < 1)
 		return (0);
@@ -54,8 +55,11 @@ static int	data_mod(t_list **lst, size_t fd, char *buf, size_t line_len)
 				break;
 			cur = cur->next;
 		}
-		if (cur->content)
+		if (cur->content && (tmp = cur->content))
+		{
 			cur->content = ft_strjoin(cur->content, buf);
+			free(tmp);
+		}
 		else
 			ft_strdup(buf);//not checked if buffer not full
 	}
@@ -111,14 +115,14 @@ static int	pop_line(t_list *lst, char **line, const int fd)
 	return (0);
 }
 
-int			get_next_line(const int fd, char **line)
+int			get_next_line2(const int fd, char **line)
 {
 	static t_list	*lst = NULL;
 	t_list			*cur;
 	ssize_t			len;
-	char			buf[BUFF_SIZE + 1];//need move to stack
+	char			buf[BUFF_SIZE + 1];
 
-	if (fd < 0 || BUFF_SIZE < 1 || fd > MAX_FD || (buf[BUFF_SIZE] = '\0'))
+	if (fd < 0 || BUFF_SIZE < 1 || (buf[BUFF_SIZE] = '\0'))
 		return (-1);
 	*line = NULL;
 	cur = lst;

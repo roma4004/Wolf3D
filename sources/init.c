@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/22 17:23:17 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/09 18:40:29 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/01/20 22:17:00 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ static t_env			*env_def_val(t_env *env)
 	env->txt.color = (SDL_Color){255, 255, 255, 0};
 	env->txt.width = 0;
 	env->txt.height = 0;
+	env->threads = 4;
 	return (env);
 }
 

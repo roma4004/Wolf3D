@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/08 17:59:40 by dromanic          #+#    #+#             */
-/*   Updated: 2018/08/03 13:58:58 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/01/04 13:21:38 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ static char	**init_data(void)
 			new_data[i++] = NULL;
 	}
 	return (new_data);
+	//ft_bzero(new_data, sizeof(char *) * MAX_FD);
 }
 
 int			get_next_line(const int fd, char **line)

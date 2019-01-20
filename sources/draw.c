@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/21 20:43:55 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/23 19:14:43 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/01/20 22:21:01 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,31 +117,59 @@ static void		draw_floor_celling_line(t_env *env, t_ray *ray,
 				line->img[TEX_WIDTH * line->texture.y + line->texture.x];
 	}
 }
+//one thread version:
+//void			raycasting(t_env *env, Uint32 **map)
+//{
+//	t_ray	ray;
+//	t_line	line;
+//	t_cam	*cam;
+//
+//	cam = &env->cam;
+//	ray.x = 0;
+//	while (++ray.x  < WIN_WIDTH)
+//	{
+//		env->cam.x = 2 * ray.x / WIN_WIDTH - 1;
+//		ray.dir.x = env->cam.dir.x * cam->zoom + cam->plane.x * cam->x;
+//		ray.dir.y = env->cam.dir.y * cam->zoom + cam->plane.y * cam->x;
+//		ray.pos.x = (Uint32)cam->pos.x;
+//		ray.pos.y = (Uint32)cam->pos.y;
+//		ray.step.x = fabs(1 / ray.dir.x);
+//		ray.step.y = fabs(1 / ray.dir.y);
+//		cam->step.x = ray.dir.x < 0 ? -1 : 1;
+//		cam->step.y = ray.dir.y < 0 ? -1 : 1;
+//		ray.dist.x = ray.step.x * (ray.dir.x < 0
+//				? cam->pos.x - ray.pos.x : ray.pos.x + 1 - cam->pos.x);
+//		ray.dist.y = ray.step.y * (ray.dir.y < 0
+//				? cam->pos.y - ray.pos.y : ray.pos.y + 1 - cam->pos.y);
+//		draw_wall_line(env, map, &ray, &line);
+//		draw_floor_celling_line(env, &ray, &line, &env->flags);
+//	}
+//}
 
-void			raycasting(t_env *env, Uint32 **map)
+void			*multi_raycasting(void *thread_data)
 {
-	t_ray	ray;
+	int		offset;
+	t_ray	r;
 	t_line	line;
-	t_cam	*cam;
+	t_env	*e;
 
-	cam = &env->cam;
-	ray.x = 0;
-	while (++ray.x < WIN_WIDTH)
+	e = ((t_pth_dt *)thread_data)->env;
+	offset = ((t_pth_dt *)thread_data)->offset;
+	r.x = 0;
+	while ((r.x += e->threads - offset) < WIN_WIDTH && r.x >= 0)
 	{
-		env->cam.x = 2 * ray.x / WIN_WIDTH - 1;
-		ray.dir.x = env->cam.dir.x * cam->zoom + cam->plane.x * cam->x;
-		ray.dir.y = env->cam.dir.y * cam->zoom + cam->plane.y * cam->x;
-		ray.pos.x = (Uint32)cam->pos.x;
-		ray.pos.y = (Uint32)cam->pos.y;
-		ray.step.x = fabs(1 / ray.dir.x);
-		ray.step.y = fabs(1 / ray.dir.y);
-		cam->step.x = ray.dir.x < 0 ? -1 : 1;
-		cam->step.y = ray.dir.y < 0 ? -1 : 1;
-		ray.dist.x = ray.step.x * (ray.dir.x < 0
-				? cam->pos.x - ray.pos.x : ray.pos.x + 1 - cam->pos.x);
-		ray.dist.y = ray.step.y * (ray.dir.y < 0
-				? cam->pos.y - ray.pos.y : ray.pos.y + 1 - cam->pos.y);
-		draw_wall_line(env, map, &ray, &line);
-		draw_floor_celling_line(env, &ray, &line, &env->flags);
+		e->cam.x = 2 * r.x / WIN_WIDTH - 1;
+		r.dir.x = e->cam.dir.x * e->cam.zoom + e->cam.plane.x * e->cam.x;
+		r.dir.y = e->cam.dir.y * e->cam.zoom + e->cam.plane.y * e->cam.x;
+		r.pos = (t_uint32_pt){(Uint32)e->cam.pos.x, (Uint32)e->cam.pos.y};
+		r.step = (t_double_pt){fabs(1 / r.dir.x), fabs(1 / r.dir.y)};
+		e->cam.step = (t_sint32_pt){r.dir.x < 0 ? -1 : 1, r.dir.y < 0 ? -1 : 1};
+		r.dist.x = r.step.x * (r.dir.x < 0
+				? e->cam.pos.x - r.pos.x : r.pos.x + 1 - e->cam.pos.x);
+		r.dist.y = r.step.y * (r.dir.y < 0
+				? e->cam.pos.y - r.pos.y : r.pos.y + 1 - e->cam.pos.y);
+		draw_wall_line(e, e->map.tex_id, &r, &line);
+		draw_floor_celling_line(e, &r, &line, &e->flags);
 	}
+	return (NULL);
 }

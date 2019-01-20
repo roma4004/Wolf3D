@@ -6,7 +6,7 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/18 17:13:08 by dromanic          #+#    #+#             */
-/*   Updated: 2018/10/24 01:35:26 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/01/20 21:58:04 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void		clear_img_buff(t_env *env)
 	}
 }
 
-static void		frame_rate_adjustment(t_env *env, t_fps *fps)
+static int		prepare_render(t_env *env, t_fps *fps)
 {
 	fps->pre_tick = fps->cur_tick;
 	fps->cur_tick = SDL_GetTicks();
@@ -63,16 +63,31 @@ static void		frame_rate_adjustment(t_env *env, t_fps *fps)
 	env->cam.rotate_speed = fps->frame_time * 2;
 	if ((fps->frame_limit_second) > fps->cur_tick - fps->pre_tick)
 		SDL_Delay(fps->frame_limit_second - (fps->cur_tick - fps->pre_tick));
+	event_handler(env, &env->cam, &env->flags);
+	clear_img_buff(env);
+	return (1);
 }
 
-void			game_loop(t_env *env)
+void			game_loop(t_env *env, int threads)
 {
-	while (!env->flags.is_game_over)
+	int			id;
+	t_pth_dt	data[threads];
+	pthread_t	threads_arr[threads];
+
+	if (!env)
+		return ;
+	while (!env->flags.is_game_over && prepare_render(env, &env->fps))
 	{
-		frame_rate_adjustment(env, &env->fps);
-		event_handler(env, &env->cam, &env->flags);
-		clear_img_buff(env);
-		raycasting(env, env->map.tex_id);
+		id = -1;
+		while (++id < threads)
+		{
+			data[id].env = env;
+			data[id].offset = id;
+			pthread_create(&threads_arr[id], NULL, multi_raycasting, &data[id]);
+		}
+		id = -1;
+		while (++id < threads)
+			pthread_join(threads_arr[id], NULL);
 		SDL_UpdateTexture(env->screen, NULL, env->buff, WIN_WIDTH << 2);
 		SDL_RenderCopy(env->renderer, env->screen, NULL, NULL);
 		if (SHOW_FPS)
@@ -90,7 +105,7 @@ int				main(int argc, char **argv)
 	{
 		if ((env = init_env()) && parse_map(argv[1], env)
 		&& !Mix_PlayMusic(env->music, 1))
-			game_loop(env);
+			game_loop(env, env->threads);
 	}
 	else
 		ft_putstr("Usage: ./wolf3d map.wmp\n");

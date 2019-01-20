@@ -6,14 +6,16 @@
 /*   By: dromanic <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/25 19:41:05 by dromanic          #+#    #+#             */
-/*   Updated: 2018/11/14 20:39:16 by dromanic         ###   ########.fr       */
+/*   Updated: 2019/01/20 22:02:26 by dromanic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAIN_H
 # define MAIN_H
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+# define WIN_WIDTH 1920   // =60pfs
+# define WIN_HEIGHT 1080  // =60pfs
+//# define WIN_WIDTH 3000    =30pfs
+//# define WIN_HEIGHT 2000   =30pfs
 # define WIN_NAME "wolf3d by dromanic (@Dentair)"
 # define DEFAULT_MENU_COLOR 0x0f9100FF
 # define DEF_FONT "resources/fonts/ARIAL.TTF"
@@ -24,13 +26,14 @@
 # define TEXTURES 8
 # define DEF_EDGE_TEX 2
 # define SHOW_FPS 1
-# define DEBUG 0
+# define DEBUG 1
 # define MAX_MAP_SIDE 10000
 
 # include <stdbool.h>
+# include <pthread.h>
 # include <stdlib.h>
-# include <math.h>
 # include <errno.h>
+# include <math.h>
 
 # include "SDL.h"
 # include "SDL_ttf.h"
@@ -38,18 +41,16 @@
 # include "SDL_mixer.h"
 # include "SDL_audio.h"
 # include "libft.h"
-# include "get_next_line2.h"
+# include "get_next_line.h"
 
-
-/*todo:	red dot aim
-	visual editor
-	inventory [i]
-	pause [p]
-	quick belt (fast access)
-	menu and splash screen
-
-*/
-
+/*todo:
+**	red dot aim
+**	visual editor
+**	inventory [i]
+**	pause [p]
+**	quick belt (fast access)
+**	menu and splash screen
+**/
 
 typedef struct	s_uint32_point
 {
@@ -169,6 +170,7 @@ typedef struct	s_flags
 typedef struct	s_environment
 {
 	int				state_arr_length;
+	int				threads;
 	Uint8			bytes_per_pixel;
 	Uint8			bits_per_pixel;
 	Uint32			err_id;
@@ -189,6 +191,12 @@ typedef struct	s_environment
 	SDL_Surface		*surface;
 	Mix_Music		*music;
 }				t_env;
+
+typedef struct	s_pthread_data
+{
+	t_env	*env;
+	int		offset;
+}				t_pth_dt;
 
 enum			e_colors
 {
@@ -212,7 +220,8 @@ enum			e_errors
 t_env			*init_env();
 t_env			*parse_map(char *file_name, t_env *env);
 void			generate_texture(t_env *env);
-void			raycasting(t_env *env, Uint32 **map);
+//void			raycasting(t_env *env, Uint32 **map);
+void			*multi_raycasting(void *thread_data);
 Uint32			chose_color(Uint32 switch_num, bool side);
 void			event_handler(t_env *env, t_cam *cam, t_flags *flags);
 int				render_interface(t_env *env, t_fps *fps, t_txt *cam);
